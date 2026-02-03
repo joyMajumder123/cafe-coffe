@@ -1,0 +1,277 @@
+:root {
+    --gold-color: #c19d60;
+    --dark-green: #1f3036;
+    --dark-slate: #263c42; /* For Contact Form */
+    --text-dark: #292929;
+    --body-font: 'Barlow', sans-serif;
+    --heading-font: 'Gelasio', serif;
+}
+
+body {
+    font-family: var(--body-font);
+    color: #666;
+    background-color: #fff;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
+
+/* --- Helper Classes --- */
+.text-gold { color: var(--gold-color) !important; }
+.bg-dark-green { background-color: var(--dark-green); }
+
+/* --- 1. Navbar & Dropdowns --- */
+.navbar {
+    padding: 20px 0;
+    transition: all 0.3s;
+    background: transparent;
+}
+.navbar.scrolled, .navbar.solid-bg {
+    background-color: var(--dark-green);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    padding: 10px 0;
+    
+/* 1. The Navbar Background becomes White */
+.navbar.scrolled {
+    background-color: #ffffff !important;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 10px 0;
+}
+
+/* 2. Change Menu Links to Dark Color */
+.navbar.scrolled .nav-link {
+    color: #333333 !important; /* Dark Grey */
+}
+
+/* 3. Keep Hover/Active color Gold */
+.navbar.scrolled .nav-link:hover, 
+.navbar.scrolled .nav-link.active {
+    color: var(--gold-color) !important;
+}
+
+/* 4. Change "BISTLY" Logo Text to Dark */
+.navbar.scrolled .navbar-brand {
+    color: #333333 !important;
+}
+
+/* 5. Change Dropdown Chevron Icons to Dark */
+.navbar.scrolled .fa-chevron-down {
+    color: #333333 !important;
+}
+
+/* 6. Mobile Toggle Button (Make it visible on white bg) */
+.navbar.scrolled .navbar-toggler {
+    border-color: #333333;
+}
+.navbar.scrolled .navbar-toggler-icon {
+    /* This creates a dark hamburger icon filter */
+    filter: invert(1) grayscale(100%) brightness(0%); 
+}
+}
+.navbar-brand { font-family: var(--heading-font); font-size: 1.8rem; font-weight: 600; }
+.navbar-nav .nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    font-weight: 500;
+    margin: 0 10px;
+}
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: var(--gold-color) !important; }
+/* =========================================
+   HOVER DROPDOWN FEATURE (Desktop Only)
+   ========================================= */
+   /* =========================================
+   NAVBAR SCROLL STYLES (White BG + Dark Text)
+   ========================================= */
+
+/* 1. The Navbar Background becomes White */
+.navbar.scrolled {
+    background-color: #ffffff !important;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    padding: 10px 0;
+}
+
+/* 2. Change Menu Links to Dark Color */
+.navbar.scrolled .nav-link {
+    color: #333333 !important; /* Dark Grey */
+}
+
+/* 3. Keep Hover/Active color Gold */
+.navbar.scrolled .nav-link:hover, 
+.navbar.scrolled .nav-link.active {
+    color: var(--gold-color) !important;
+}
+
+/* 4. Change "BISTLY" Logo Text to Dark */
+.navbar.scrolled .navbar-brand {
+    color: #333333 !important;
+}
+
+/* 5. Change Dropdown Chevron Icons to Dark */
+.navbar.scrolled .fa-chevron-down {
+    color: #333333 !important;
+}
+
+/* 6. Mobile Toggle Button (Make it visible on white bg) */
+.navbar.scrolled .navbar-toggler {
+    border-color: #333333;
+}
+.navbar.scrolled .navbar-toggler-icon {
+    /* This creates a dark hamburger icon filter */
+    filter: invert(1) grayscale(100%) brightness(0%); 
+}
+
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; /* Prevents the menu from disappearing when moving mouse down */
+        animation: fadeInUp 0.3s ease; /* Optional: Makes it fade in smoothly */
+    }
+}
+/* Dropdown Styles */
+.dropdown-menu {
+    background-color: var(--dark-green);
+    border: none;
+    border-radius: 0;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+.dropdown-item {
+    color: rgba(255,255,255,0.8);
+    padding: 10px 20px;
+    font-size: 0.95rem;
+}
+.dropdown-item:hover {
+    background-color: transparent;
+    color: var(--gold-color);
+    padding-left: 25px; /* Slide effect */
+    transition: 0.3s;
+}
+
+.btn-reservation {
+    background-color: var(--gold-color);
+    color: #fff;
+    border-radius: 0;
+    padding: 12px 25px;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s;
+    text-decoration: none;
+}
+.btn-reservation:hover { background-color: #fff; color: var(--dark-green); }
+
+/* --- 2. Hero Section (General) --- */
+.hero-wrapper {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(22, 43, 50, 0.85); 
+    z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; text-align: center; }
+.hero-title { color: #fff; font-size: 4.5rem; margin-bottom: 10px; }
+.breadcrumb-item a { color: rgba(255,255,255,0.7); text-decoration: none; }
+.breadcrumb-item.active { color: #fff; }
+
+/* --- 3. Menu Grid & Section Titles --- */
+.subtitle-wrap { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+.subtitle { color: var(--gold-color); font-size: 1.1rem; position: relative; padding: 0 20px; }
+.subtitle::before, .subtitle::after {
+    content: ''; position: absolute; top: 50%; width: 40px; height: 1px; background-color: var(--gold-color);
+}
+.subtitle::before { left: -30px; }
+.subtitle::after { right: -30px; }
+.main-title { color: #233d4d; font-size: 3.5rem; }
+
+/* Filter & Cards */
+.btn-filter { border: none; background: transparent; color: #777; font-weight: 600; padding: 5px 15px; position: relative; }
+.btn-filter:hover, .btn-filter.active { color: var(--gold-color); }
+.btn-filter.active::after {
+    content: ''; position: absolute; bottom: 0; left: 15px; right: 15px; height: 2px; background-color: var(--gold-color);
+}
+.menu-card { border: none; background: transparent; }
+.img-wrapper { height: 280px; overflow: hidden; margin-bottom: 15px; }
+.img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+.menu-card:hover img { transform: scale(1.1); }
+.card-title a { color: var(--text-dark); text-decoration: none; font-size: 1.4rem; transition: 0.3s; }
+.card-title a:hover { color: var(--gold-color); }
+.price { display: block; margin-top: 5px; color: var(--gold-color); font-size: 1.2rem; font-weight: 700; }
+
+/* --- 4. NEW: Booking CTA Section (Home) --- */
+.booking-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600&q=80');
+    background-size: cover;
+    background-attachment: fixed; /* Parallax effect */
+    padding: 100px 0;
+    text-align: center;
+}
+.booking-title { color: #fff; font-size: 4rem; margin-bottom: 40px; }
+.btn-outline-gold {
+    border: 2px solid var(--gold-color);
+    color: #fff;
+    padding: 15px 40px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+}
+.btn-outline-gold:hover { background-color: var(--gold-color); color: #fff; }
+
+/* --- 5. NEW: Contact Page Styles --- */
+/* Info Cards */
+.contact-info-card {
+    background: #fff;
+    padding: 40px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    height: 100%;
+}
+.contact-info-card:hover { transform: translateY(-5px); }
+.icon-circle {
+    width: 60px; height: 60px; background: var(--dark-green); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; font-size: 1.5rem;
+}
+.contact-info-card h4 { color: #333; margin-bottom: 15px; }
+
+/* Talk to Us Form Section */
+.form-section-wrap { padding: 80px 0; }
+.contact-form-wrapper {
+    background-color: var(--dark-slate);
+    padding: 50px;
+    color: #fff;
+}
+.contact-input {
+    background-color: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 15px;
+    border-radius: 0;
+}
+.contact-input:focus {
+    background-color: rgba(255,255,255,0.15);
+    border-color: var(--gold-color);
+    box-shadow: none;
+    color: #fff;
+}
+.contact-input::placeholder { color: rgba(255,255,255,0.5); }
+.form-select.contact-input option { color: #333; } /* Fix dropdown text color on select */
+
+/* Opening Hours in Contact Text */
+.hours-list { margin-top: 30px; }
+.hours-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
+.hours-label { font-weight: 700; color: var(--dark-green); }
+
+/* Animation Classes */
+.menu-item.hide { display: none; }
+.menu-item.show { animation: fadeInUp 0.5s ease; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
