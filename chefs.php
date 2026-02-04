@@ -21,7 +21,7 @@
             <!-- Chef 1 -->
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=500&q=80" class="card-img-top " style="width:390px; height=580px;" alt="Chef">
+                    <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=500&q=80" class="card-img-top " style="width:416px; height:624px;" alt="Chef">
 
                     <div class="card-body">
                         <h4 class="card-title">John Doe</h4>
