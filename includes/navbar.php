@@ -24,16 +24,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <!-- About -->
                 <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" href="about.php">About Us</a></li>
 
-                <!-- Menu Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?php echo (in_array($current_page, ['menugrid.php', 'menulist.php', 'menuitems.php'])) ? 'active' : ''; ?>" href="#" data-bs-toggle="dropdown">Menu</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="menugrid.php">Menu Grid</a></li>
-                        <li><a class="dropdown-item" href="menulist.php">Menu List</a></li>
-                        <li><a class="dropdown-item" href="menuitems.php">Menu Details</a></li>
-                    </ul>
-                </li>
-
+                <!-- Menu  -->
+                <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" href="menugrid.php">Menu</a></li>
+                      
                 <!-- Pages Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?php echo (in_array($current_page, ['chefs.php', 'gallery.php'])) ? 'active' : ''; ?>" href="#" data-bs-toggle="dropdown">Pages</a>
@@ -53,12 +46,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
        </a>
       <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="adminDropdown">
         
-        <li><a class="dropdown-item" href="admin/startbootstrap-sb-admin-2-gh-pages/index.html"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
-        <li><a class="dropdown-item" href="admin/manage-menu.php"><i class="fas fa-utensils me-2"></i> Manage Menu</a></li>
+        <li><a class="dropdown-item" href="admin\startbootstrap-sb-admin-2-gh-pages\index.html"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
+        <li><a class="dropdown-item" href="admin/menu.php"><i class="fas fa-utensils me-2"></i> Manage Menu</a></li>
         <li><a class="dropdown-item" href="admin/reservation.php"><i class="fas fa-calendar-check me-2"></i> Reservations</a></li>
         <li><a class="dropdown-item" href="admin/our-chefs.php"><i class="fas fa-user-tie me-2"></i> Our Chefs</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item text-danger" href="admin/startbootstrap-sb-admin-2-gh-pages\login.html"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+        <li><a class="dropdown-item text-danger" href="admin/startbootstrap-sb-admin-2-gh-pages\login.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
        </ul>
        </li>
 
