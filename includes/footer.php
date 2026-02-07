@@ -1,7 +1,6 @@
 <footer class="default-footer rs-footer pt-5 p-r z-1">
     <!-- Decorative Background Shapes -->
-    <div class="shape shape-one"><img src="assets/images/home-restaurant/footer/shape1.png" alt="shape"></div>
-    <div class="shape shape-two"><img src="assets/images/home-restaurant/footer/shape2.png" alt="shape"></div>
+    
 
     <div class="container">
         <!-- Footer Widget Area -->
@@ -32,8 +31,8 @@
                         <div class="widget-content">
                             <ul>
                                 <li><a href="about.php">About Us</a></li>
-                                <li><a href="team.php">Our Team</a></li>
-                                <li><a href="menu.php">Our Menu</a></li>
+                                <li><a href="chefs.php">Our Team</a></li>
+                                <li><a href="menugrid.php">Our Menu</a></li>
                                 <li><a href="blog.php">Our Blog</a></li>
                                 <li><a href="contact.php">Contact</a></li>
                             </ul>
@@ -78,7 +77,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="copyright-text" data-aos="fade-right" data-aos-duration="1200">
-                        <p>&copy; <?php echo date("Y"); ?> All rights reserved by Pixelfit</p>
+                        <p>&copy; <?php echo date("Y"); ?> All rights reserved by jm</p>
                     </div>
                 </div>
                 <div class="col-md-6">
