@@ -16,26 +16,7 @@
         <h1 class="hero-title">Classic Indian Resturant</h1>
         <p class="hero-subtitle">Experience the authentic flavors of India in every bite.</p>
 
-        <!-- Sliding Icons Section -->
-        <div class="sliding-icons mt-4">
-            <div id="iconsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="d-flex justify-content-center">
-                            <div class="icon-item">
-                                <i class="fas fa-utensils"></i>
-                                <p>Menu</p>
-                            </div>
-                            <div class="icon-item">
-                                <i class="fas fa-calendar-check"></i>
-                                <p>Reserve</p>
-                            </div>
-                            <div class="icon-item">
-                                <i class="fas fa-phone"></i>
-                                <p>Contact</p>
-                            </div>
-                        </div>
-                    </div>
+        
                     <div class="carousel-item">
                         <div class="d-flex justify-content-center">
                             <div class="icon-item">
