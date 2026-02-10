@@ -44,10 +44,10 @@
         </div>
     </div>
 </header>
-<!-- Hero Slider Section -->
+<!-- Hero Slider Section 
 <section class="hero-slider-area">
     <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
-        <!-- Indicators (Optional) -->
+        <!-- Indicators (Optional) 
         <div class="carousel-indicators">
             <button type="button" data-target="#heroCarousel" data-slide-to="0" class="active"></button>
             <button type="button" data-target="#heroCarousel" data-slide-to="1"></button>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="carousel-inner">
-            <!-- Slide 1 -->
+            <!-- Slide 1 
             <div class="carousel-item active">
                 <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920&q=80');"></div>
                 <div class="carousel-caption d-flex align-items-center">
@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            <!-- Slide 2 -->
+            <!-- Slide 2 
             <div class="carousel-item">
                 <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1920&q=80');"></div>
                 <div class="carousel-caption d-flex align-items-center">
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <!-- Navigation Arrows -->
+        <!-- Navigation Arrows 
         <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
@@ -108,7 +108,7 @@
     </div>
 </section>
 
-<!-- Slidable Banner Section -->
+<!-- Slidable Banner Section 
 <section class="slidable-banner py-5">
     <div class="container">
         <div id="bannerCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
@@ -225,12 +225,7 @@
         </div>
 
         <!-- Cart Section -->
-        <div class="mt-5">
-            <h3>Your Cart</h3>
-            <div id="cart-items"></div>
-            <div id="cart-total" class="mt-3"></div>
-            <button id="place-order-btn" class="btn btn-success mt-3" style="display:none;">Place Order</button>
-        </div>
+        
 
         <!-- Order Modal -->
         <div class="modal fade" id="orderModal" tabindex="-1">
