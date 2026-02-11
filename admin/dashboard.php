@@ -50,19 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="dashboard.php" class="nav-link">📊 Dashboard</a></li>
-                    <li class="nav-item"><a href="reports.php" class="nav-link">📈 Reports</a></li>
-                    <li class="nav-item"><a href="orders.php" class="nav-link">📦 Orders</a></li>
-                    <li class="nav-item"><a href="inquiries.php" class="nav-link">💬 Inquiries</a></li>
-                    <li class="nav-item"><a href="menu.php" class="nav-link">🍽️ Menu</a></li>
-                    <li class="nav-item"><a href="categories.php" class="nav-link active">📂 Categories</a></li>
-                    <li class="nav-item"><a href="reservation.php" class="nav-link">📅 Reservations</a></li>
-                    <li class="nav-item"><a href="staff.php" class="nav-link">👥 Staff</a></li>
-                    
-                </ul>
-            </div>
+            <?php include 'includes/sidebar.php'; ?>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
@@ -82,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
                 $preparingOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders WHERE status IN ('confirmed', 'preparing', 'ready')"))['total'] ?? 0;
                 
                 // Other metrics
-                $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users"))['total'] ?? 0;
+                $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM customers"))['total'] ?? 0;
                 $totalMenuItems = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu_items"))['total'] ?? 0;
                 $totalReservations = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM reservations"))['total'] ?? 0;
                 $totalInquiries = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM contact_submissions"))['total'] ?? 0;

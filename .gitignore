@@ -2,3 +2,6 @@ assets/
 auth.php
 db.php
 db_config.php
+.vscode/
+TODO.md
+USER_DESiGN_GUIDE.md

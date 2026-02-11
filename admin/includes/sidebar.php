@@ -1,13 +1,24 @@
+<?php
+$current_page = basename($_SERVER['PHP_SELF'] ?? '');
+$nav_links = [
+    'dashboard.php'  => '📊 Dashboard',
+    'reports.php'    => '📈 Reports',
+    'orders.php'     => '📦 Orders',
+    'inquiries.php'  => '💬 Inquiries',
+    'menu.php'       => '🍽️ Menu',
+    'categories.php' => '📂 Categories',
+    'reservation.php'=> '📅 Reservations',
+    'staff.php'      => '👥 Staff'
+];
+?>
 <div class="col-md-2 sidebar">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="dashboard.php" class="nav-link active">📊 Dashboard</a></li>
-                     <li class="nav-item"><a href="reports.php" class="nav-link">📈 Reports</a></li>
-                    <li class="nav-item"><a href="orders.php" class="nav-link">📦 Orders</a></li>
-                    <li class="nav-item"><a href="inquiries.php" class="nav-link">💬 Inquiries</a></li>
-                    <li class="nav-item"><a href="menu.php" class="nav-link">🍽️ Menu</a></li>
-                    <li class="nav-item"><a href="categories.php" class="nav-link">📂 Categories</a></li>
-                    <li class="nav-item"><a href="reservation.php" class="nav-link">📅 Reservations</a></li>
-                    <li class="nav-item"><a href="staff.php" class="nav-link">👥 Staff</a></li>
-                   
-                </ul>
-            </div>
+    <ul class="nav flex-column">
+        <?php foreach ($nav_links as $path => $label): ?>
+            <li class="nav-item">
+                <a href="<?php echo $path; ?>" class="nav-link <?php echo $current_page === $path ? 'active' : ''; ?>">
+                    <?php echo $label; ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

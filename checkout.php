@@ -9,8 +9,8 @@ if (empty($_SESSION['customer_id'])) {
 }
 
 include 'admin/includes/db.php';
+require_once 'includes/customer_meta.php';
 include 'includes/user_layout.php';
-
 
 $customer_id = (int) $_SESSION['customer_id'];
 $stmt = $conn->prepare("SELECT name, email, phone FROM customers WHERE id = ? LIMIT 1");
@@ -18,6 +18,36 @@ $stmt->bind_param('i', $customer_id);
 $stmt->execute();
 $customer = $stmt->get_result()->fetch_assoc();
 $stmt->close();
+
+ensure_customer_meta_tables($conn);
+ensure_address_has_default($conn, $customer_id);
+$addresses = fetch_customer_addresses($conn, $customer_id);
+$preferred_payment = fetch_customer_payment_preference($conn, $customer_id);
+$default_address = null;
+foreach ($addresses as $addr) {
+    if (!empty($addr['is_default'])) {
+        $default_address = $addr;
+        break;
+    }
+}
+if ($default_address === null && !empty($addresses)) {
+    $default_address = $addresses[0];
+}
+
+$default_address_line = '';
+$default_city = '';
+if ($default_address) {
+    $line_parts = [$default_address['address_line1']];
+    if (!empty($default_address['address_line2'])) {
+        $line_parts[] = $default_address['address_line2'];
+    }
+    $default_address_line = trim(implode(', ', array_filter($line_parts)));
+    $default_city = $default_address['city'] ?? '';
+    if (empty($customer['phone']) && !empty($default_address['phone'])) {
+        $customer['phone'] = $default_address['phone'];
+    }
+}
+$preferred_payment_method = $preferred_payment ?: 'cash';
 ?>
 
 <section class="py-5 user-page">
@@ -48,19 +78,44 @@ $stmt->close();
                                     <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($customer['phone'] ?? ''); ?>" required>
                                     <div class="invalid-feedback">Please enter a phone number.</div>
                                 </div>
+                                <?php if (!empty($addresses)): ?>
+                                    <div class="col-12">
+                                        <label class="form-label">Use a Saved Address</label>
+                                        <select class="form-select" id="saved-address-select">
+                                            <option value="" <?php echo $default_address ? '' : 'selected'; ?>>Enter a new address</option>
+                                            <?php foreach ($addresses as $address): ?>
+                                                <option
+                                                    value="<?php echo (int) $address['id']; ?>"
+                                                    data-line1="<?php echo htmlspecialchars($address['address_line1'], ENT_QUOTES); ?>"
+                                                    data-line2="<?php echo htmlspecialchars($address['address_line2'] ?? '', ENT_QUOTES); ?>"
+                                                    data-city="<?php echo htmlspecialchars($address['city'], ENT_QUOTES); ?>"
+                                                    data-state="<?php echo htmlspecialchars($address['state'] ?? '', ENT_QUOTES); ?>"
+                                                    data-postal="<?php echo htmlspecialchars($address['postal_code'] ?? '', ENT_QUOTES); ?>"
+                                                    data-phone="<?php echo htmlspecialchars($address['phone'] ?? '', ENT_QUOTES); ?>"
+                                                    data-label="<?php echo htmlspecialchars($address['label'], ENT_QUOTES); ?>"
+                                                    <?php echo !empty($address['is_default']) ? 'selected' : ''; ?>
+                                                >
+                                                    <?php echo htmlspecialchars(($address['label'] ?? 'Address') . ' — ' . ($address['city'] ?? '')); ?>
+                                                    <?php if (!empty($address['is_default'])): ?> (Default)<?php endif; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <small class="text-muted">Selecting an address will autofill the delivery fields below.</small>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="col-md-6">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" name="address" placeholder="Street, area, building">
+                                    <input type="text" class="form-control" name="address" placeholder="Street, area, building" value="<?php echo htmlspecialchars($default_address_line); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">City</label>
-                                    <input type="text" class="form-control" name="city" placeholder="City">
+                                    <input type="text" class="form-control" name="city" placeholder="City" value="<?php echo htmlspecialchars($default_city); ?>">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Payment Method</label>
                                     <div class="payment-options-container">
                                         <label class="payment-option">
-                                            <input type="radio" name="payment_method" value="cash" checked class="payment-radio">
+                                            <input type="radio" name="payment_method" value="cash" class="payment-radio" <?php echo $preferred_payment_method === 'cash' ? 'checked' : ''; ?>>
                                             <div class="payment-card">
                                                 <i class="fas fa-money-bill-wave"></i>
                                                 <div>
@@ -71,7 +126,7 @@ $stmt->close();
                                         </label>
 
                                         <label class="payment-option">
-                                            <input type="radio" name="payment_method" value="card" class="payment-radio">
+                                            <input type="radio" name="payment_method" value="card" class="payment-radio" <?php echo $preferred_payment_method === 'card' ? 'checked' : ''; ?>>
                                             <div class="payment-card">
                                                 <i class="fas fa-credit-card"></i>
                                                 <div>
@@ -82,7 +137,7 @@ $stmt->close();
                                         </label>
 
                                         <label class="payment-option">
-                                            <input type="radio" name="payment_method" value="upi" class="payment-radio">
+                                            <input type="radio" name="payment_method" value="upi" class="payment-radio" <?php echo $preferred_payment_method === 'upi' ? 'checked' : ''; ?>>
                                             <div class="payment-card">
                                                 <i class="fas fa-mobile-alt"></i>
                                                 <div>
@@ -199,6 +254,10 @@ $stmt->close();
         const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
         const cardDetails = document.getElementById('card-details');
         const upiDetails = document.getElementById('upi-details');
+        const savedAddressSelect = document.getElementById('saved-address-select');
+        const addressInput = document.querySelector('input[name="address"]');
+        const cityInput = document.querySelector('input[name="city"]');
+        const phoneInput = document.querySelector('input[name="phone"]');
 
         function updatePaymentDetails() {
             const selectedPayment = document.querySelector('input[name="payment_method"]:checked').value;
@@ -215,6 +274,26 @@ $stmt->close();
             }
         }
 
+        function applySavedAddress(option) {
+            if (!option || !addressInput || !cityInput) {
+                return;
+            }
+            if (!option.value) {
+                addressInput.value = '';
+                cityInput.value = '';
+                return;
+            }
+            const line1 = option.getAttribute('data-line1') || '';
+            const line2 = option.getAttribute('data-line2') || '';
+            const parts = [line1, line2].filter(Boolean);
+            addressInput.value = parts.join(', ').trim();
+            cityInput.value = option.getAttribute('data-city') || '';
+            const savedPhone = option.getAttribute('data-phone');
+            if (savedPhone && phoneInput) {
+                phoneInput.value = savedPhone;
+            }
+        }
+
         // Add event listeners to all payment radio buttons
         paymentRadios.forEach(radio => {
             radio.addEventListener('change', updatePaymentDetails);
@@ -222,6 +301,18 @@ $stmt->close();
 
         // Initialize on page load
         updatePaymentDetails();
+
+        if (savedAddressSelect) {
+            savedAddressSelect.addEventListener('change', function () {
+                const option = savedAddressSelect.options[savedAddressSelect.selectedIndex];
+                applySavedAddress(option);
+            });
+
+            const initialOption = savedAddressSelect.options[savedAddressSelect.selectedIndex];
+            if (initialOption && initialOption.value) {
+                applySavedAddress(initialOption);
+            }
+        }
     })();
 
     (function () {

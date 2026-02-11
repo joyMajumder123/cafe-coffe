@@ -6,9 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 include 'admin/includes/db.php';
 
 $errors = [];
-$redirect = $_GET['redirect'] ?? 'profile.php';
+$redirect = $_GET['redirect'] ?? 'index.php';
 if (!preg_match('/^[a-zA-Z0-9_\/-]+\.php$/', $redirect)) {
-    $redirect = 'profile.php';
+    $redirect = 'index.php';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,7 +41,7 @@ include 'includes/navbar.php';
 ?>
 
 <section class="py-5 customer-page">
-    <div class="container">
+    <div class="container" style ="margin-top: 80px;">
         <div class="row justify-content-center">
             <div class="col-lg-5">
                 <div class="card customer-card">

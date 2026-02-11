@@ -53,7 +53,7 @@ $customer_name = $_SESSION['customer_name'] ?? 'Profile';
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="customerDropdown">
                         <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-circle me-2"></i> My Profile</a></li>
-                        <li><a class="dropdown-item" href="checkout.php"><i class="fas fa-shopping-cart me-2"></i> Checkout</a></li>
+                        <li><a class="dropdown-item" href="checkout.php"><i class="fas fa-shopping-cart me-2"></i> My Cart</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="customer_logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                     </ul>
@@ -66,7 +66,6 @@ $customer_name = $_SESSION['customer_name'] ?? 'Profile';
                     <a class="nav-link" href="customer_register.php">Register</a>
                 </li>
                 <?php endif; ?>
-
                 <?php if ($is_admin): ?>
                 <!-- Admin Management Dropdown -->
                 <li class="nav-item dropdown ms-lg-3 admin-menu-wrapper">

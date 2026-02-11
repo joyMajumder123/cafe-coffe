@@ -38,19 +38,7 @@ $filter_status    = $_GET['status']     ?? '';
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="dashboard.php" class="nav-link">📊 Dashboard</a></li>
-                    <li class="nav-item"><a href="reports.php" class="nav-link">📈 Reports</a></li>
-                    <li class="nav-item"><a href="orders.php" class="nav-link">📦 Orders</a></li>
-                    <li class="nav-item"><a href="inquiries.php" class="nav-link">💬 Inquiries</a></li>
-                    <li class="nav-item"><a href="menu.php" class="nav-link">🍽️ Menu</a></li>
-                    <li class="nav-item"><a href="categories.php" class="nav-link">📂 Categories</a></li>
-                    <li class="nav-item"><a href="reservation.php" class="nav-link">📅 Reservations</a></li>
-                    <li class="nav-item"><a href="staff.php" class="nav-link active">👥 Staff</a></li>
-                
-                </ul>
-            </div>
+            <?php include 'includes/sidebar.php'; ?>
 
 
             <!-- Main Content -->
@@ -105,8 +93,54 @@ $filter_status    = $_GET['status']     ?? '';
                             $stmt->close();
                         }
 
-                        $totalOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders"))['total'] ?? 0;
-                        $todayRevenue = mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(total_amount) as revenue FROM orders WHERE DATE(created_at)=CURDATE()"))['revenue'] ?? 0;
+                        // Get revenue ONLY from completed/delivered orders (with date filters if applied)
+                        $revenue_where = "WHERE status IN ('completed', 'delivered')";
+                        $revenue_params = [];
+                        $revenue_types = '';
+                        if ($filter_date_from) {
+                            $revenue_where .= " AND DATE(created_at) >= ?";
+                            $revenue_params[] = $filter_date_from;
+                            $revenue_types .= 's';
+                        }
+                        if ($filter_date_to) {
+                            $revenue_where .= " AND DATE(created_at) <= ?";
+                            $revenue_params[] = $filter_date_to;
+                            $revenue_types .= 's';
+                        }
+                        
+                        // Get revenue with filters
+                        $revenue_stmt = $conn->prepare("SELECT COALESCE(SUM(total_amount), 0) as revenue FROM orders $revenue_where");
+                        if ($revenue_types) $revenue_stmt->bind_param($revenue_types, ...$revenue_params);
+                        $revenue_stmt->execute();
+                        $todayRevenue = $revenue_stmt->get_result()->fetch_assoc()['revenue'] ?? 0;
+                        $revenue_stmt->close();
+
+                        // Build order count query based on filters (includes all statuses)
+                        $count_where = "WHERE 1=1";
+                        $count_params = [];
+                        $count_types  = '';
+                        if ($filter_date_from) {
+                            $count_where .= " AND DATE(created_at) >= ?";
+                            $count_params[] = $filter_date_from;
+                            $count_types .= 's';
+                        }
+                        if ($filter_date_to) {
+                            $count_where .= " AND DATE(created_at) <= ?";
+                            $count_params[] = $filter_date_to;
+                            $count_types .= 's';
+                        }
+                        if ($filter_status) {
+                            $count_where .= " AND status = ?";
+                            $count_params[] = $filter_status;
+                            $count_types .= 's';
+                        }
+                        
+                        // Get total orders count with filters
+                        $count_stmt = $conn->prepare("SELECT COUNT(*) as total FROM orders $count_where");
+                        if ($count_types) $count_stmt->bind_param($count_types, ...$count_params);
+                        $count_stmt->execute();
+                        $totalOrders = $count_stmt->get_result()->fetch_assoc()['total'] ?? 0;
+                        $count_stmt->close();
 
                         echo "<div class='row mb-4'>
                             <div class='col-md-4'>

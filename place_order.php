@@ -45,7 +45,7 @@ if ($subtotal <= 0) {
 if ($total_amount <= 0) {
     $total_amount = $subtotal + $delivery_charge + $tax;
 }
-$payment_method = 'cash_on_delivery';
+$payment_method = trim($_POST['payment_method'] ?? 'cash_on_delivery');
 $status = 'pending';
 
 $stmt = $conn->prepare("INSERT INTO orders (customer_id, customer_name, email, phone, address, city, items, subtotal, delivery_charge, tax, total_amount, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
