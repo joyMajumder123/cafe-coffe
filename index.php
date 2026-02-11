@@ -1,12 +1,19 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/navbar.php'; ?>
+<?php
+include 'admin/includes/db.php';
+
+$menu_items = [];
+$menu_result = $conn->query("SELECT id, name, description, category, price, image FROM menu_items WHERE status = 'active' ORDER BY created_at DESC");
+if ($menu_result) {
+    while ($row = $menu_result->fetch_assoc()) {
+        $menu_items[] = $row;
+    }
+}
+
+include 'includes/header.php';
+include 'includes/navbar.php';
+?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Hero Section -->
 <header class="hero-wrapper" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80');">
     <div class="hero-overlay">
@@ -108,6 +115,7 @@
     </div>
 </section>
 
+
 <!-- Slidable Banner Section 
 <section class="slidable-banner py-5">
     <div class="container">
@@ -162,97 +170,52 @@
         </div>
 
         <div class="row g-4" id="menu-items-container">
-            <!-- Item 1 -->
-            <div class="col-md-6 col-lg-4 menu-item" data-category="breakfast">
-                <div class="card menu-card h-100">
-                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=80" alt="Food"></div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Grilled Chicken Salad</h5>
-                        <p class="text-muted">Chicken, Olive Oil, Fresh Veggies, Cheese</p>
-                        <span class="price">$12.99</span>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-name="Grilled Chicken Salad" data-price="12.99">Add to Cart</button>
+            <?php if (!empty($menu_items)): ?>
+                <?php foreach ($menu_items as $item): ?>
+                    <?php
+                    $category = strtolower(trim($item['category'] ?? ''));
+                    $category_attr = $category !== '' ? $category : 'all';
+                    ?>
+                    <div class="col-md-6 col-lg-4 menu-item" data-category="<?php echo htmlspecialchars($category_attr); ?>">
+                        <div class="card menu-card h-100">
+                            <div class="img-wrapper">
+                                <?php if (!empty($item['image'])): ?>
+                                    <img src="<?php echo htmlspecialchars($item['image']); ?>" alt="Food">
+                                <?php else: ?>
+                                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80" alt="Food">
+                                <?php endif; ?>
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h5>
+                                <p class="text-muted"><?php echo htmlspecialchars($item['description']); ?></p>
+                                <span class="price">₹<?php echo number_format((float) $item['price'], 2); ?></span>
+                                <button
+                                    class="btn btn-primary mt-2 add-to-cart"
+                                    data-id="<?php echo (int) $item['id']; ?>"
+                                    data-name="<?php echo htmlspecialchars($item['name']); ?>"
+                                    data-price="<?php echo number_format((float) $item['price'], 2); ?>"
+                                >Add to Cart</button>
+                            </div>
+                        </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <div class="alert alert-info text-center">No menu items available yet.</div>
                 </div>
-            </div>
-            <!-- Item 2 -->
-            <div class="col-md-6 col-lg-4 menu-item" data-category="lunch">
-                <div class="card menu-card h-100">
-                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Food"></div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Classic Beef Burger</h5>
-                        <p class="text-muted">Beef Patty, Cheddar, Lettuce, Tomato</p>
-                        <span class="price">$18.50</span>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-name="Classic Beef Burger" data-price="18.50">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Item 3 -->
-            <div class="col-md-6 col-lg-4 menu-item" data-category="dinner">
-                <div class="card menu-card h-100">
-                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&q=80" alt="Food"></div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Seafood Pasta</h5>
-                        <p class="text-muted">Shrimp, Squid, Tomato Sauce, Basil</p>
-                        <span class="price">$22.00</span>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-name="Seafood Pasta" data-price="22.00">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-             <!-- Item 4 -->
-             <div class="col-md-6 col-lg-4 menu-item" data-category="drinks">
-                <div class="card menu-card h-100">
-                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&q=80" alt="Food"></div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Fresh Mojito</h5>
-                        <p class="text-muted">Lime, Mint, Soda, Sugar, Ice</p>
-                        <span class="price">$8.50</span>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-name="Fresh Mojito" data-price="8.50">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
-             <!-- Item 5 -->
-             <div class="col-md-6 col-lg-4 menu-item" data-category="lunch">
-                <div class="card menu-card h-100">
-                    <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=600&q=80" alt="Food"></div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Salmon Steak</h5>
-                        <p class="text-muted">Salmon, Asparagus, Lemon</p>
-                        <span class="price">$25.50</span>
-                        <button class="btn btn-primary mt-2 add-to-cart" data-name="Salmon Steak" data-price="25.50">Add to Cart</button>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
 
-        <!-- Cart Section -->
-        
-
-        <!-- Order Modal -->
-        <div class="modal fade" id="orderModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Place Your Order</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="order-form">
-                            <div class="mb-3">
-                                <label>Name</label>
-                                <input type="text" class="form-control" name="customer_name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Email</label>
-                                <input type="email" class="form-control" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label>Phone</label>
-                                <input type="text" class="form-control" name="phone" required>
-                            </div>
-                            <input type="hidden" name="items" id="order-items">
-                            <input type="hidden" name="total_amount" id="order-total">
-                            <button type="submit" class="btn btn-primary">Submit Order</button>
-                        </form>
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="mb-3">Your Cart</h4>
+                        <div id="cart-items" class="mb-3 text-muted">No items added.</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>Total: ₹<span id="cart-total">0.00</span></strong>
+                            <a class="btn btn-gold" id="checkout-btn" href="checkout.php">Go to Checkout</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -294,10 +257,117 @@
         </div>
     </div>
 </section>
-</head>
-<body
- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    (function () {
+        const cart = [];
+        const cartItemsEl = document.getElementById('cart-items');
+        const cartTotalEl = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const cartStorageKey = 'cafe_cart';
+
+        function loadCart() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(cartStorageKey) || '[]');
+                if (Array.isArray(saved)) {
+                    saved.forEach(function (item) { cart.push(item); });
+                }
+            } catch (error) {
+                localStorage.removeItem(cartStorageKey);
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem(cartStorageKey, JSON.stringify(cart));
+        }
+
+        function renderCart() {
+            if (cart.length === 0) {
+                cartItemsEl.textContent = 'No items added.';
+                cartTotalEl.textContent = '0.00';
+                checkoutBtn.classList.add('disabled');
+                checkoutBtn.setAttribute('aria-disabled', 'true');
+                checkoutBtn.setAttribute('tabindex', '-1');
+                return;
+            }
+
+            const list = document.createElement('ul');
+            list.className = 'list-unstyled mb-0';
+            let total = 0;
+
+            cart.forEach(function (item, index) {
+                total += item.price * item.quantity;
+                const li = document.createElement('li');
+                li.className = 'd-flex justify-content-between align-items-center mb-2';
+                li.innerHTML =
+                    '<div class="d-flex align-items-center gap-2">' +
+                        '<button class="btn btn-sm btn-outline-secondary" data-action="decrease" data-index="' + index + '">-</button>' +
+                        '<span>' + item.name + ' x ' + item.quantity + '</span>' +
+                        '<button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="' + index + '">+</button>' +
+                    '</div>' +
+                    '<span>$' + (item.price * item.quantity).toFixed(2) + '</span>' +
+                    '<button class="btn btn-sm btn-outline-danger ms-2" data-action="remove" data-index="' + index + '">Remove</button>';
+                list.appendChild(li);
+            });
+
+            cartItemsEl.innerHTML = '';
+            cartItemsEl.appendChild(list);
+            cartTotalEl.textContent = total.toFixed(2);
+            checkoutBtn.classList.remove('disabled');
+            checkoutBtn.removeAttribute('aria-disabled');
+            checkoutBtn.removeAttribute('tabindex');
+            saveCart();
+        }
+
+        document.querySelectorAll('.add-to-cart').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const id = parseInt(button.dataset.id, 10);
+                const name = button.dataset.name;
+                const price = parseFloat(button.dataset.price);
+                const existing = cart.find(function (item) { return item.id === id; });
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ id: id, name: name, price: price, quantity: 1 });
+                }
+                renderCart();
+            });
+        });
+
+        cartItemsEl.addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.matches('button[data-index]')) {
+                const index = parseInt(target.dataset.index, 10);
+                const action = target.dataset.action;
+                if (Number.isNaN(index)) {
+                    return;
+                }
+
+                if (action === 'increase') {
+                    cart[index].quantity += 1;
+                } else if (action === 'decrease') {
+                    cart[index].quantity -= 1;
+                    if (cart[index].quantity <= 0) {
+                        cart.splice(index, 1);
+                    }
+                } else {
+                    cart.splice(index, 1);
+                }
+
+                renderCart();
+            }
+        });
+
+        checkoutBtn.addEventListener('click', function (event) {
+            if (cart.length === 0) {
+                event.preventDefault();
+            }
+        });
+        loadCart();
+        renderCart();
+    })();
+</script>
 
 </body> 
 <?php include 'includes/footer.php'; ?>

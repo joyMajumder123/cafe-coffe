@@ -1,5 +1,12 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $current_page = basename($_SERVER['PHP_SELF']);
+$is_admin = !empty($_SESSION['admin']);
+$is_customer = !empty($_SESSION['customer_id']);
+$customer_name = $_SESSION['customer_name'] ?? 'Profile';
 ?>
 <nav class="navbar navbar-expand-lg fixed-top <?php echo ($current_page != 'index.php') ? 'solid-bg' : ''; ?>">
     <div class="container">
@@ -39,21 +46,43 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <!-- Contact -->
                 <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact</a></li>
 
+                <?php if ($is_customer): ?>
+                <li class="nav-item dropdown ms-lg-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="customerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user me-1"></i> <?php echo htmlspecialchars($customer_name); ?>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="customerDropdown">
+                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-circle me-2"></i> My Profile</a></li>
+                        <li><a class="dropdown-item" href="checkout.php"><i class="fas fa-shopping-cart me-2"></i> Checkout</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="customer_logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                    </ul>
+                </li>
+                <?php else: ?>
+                <li class="nav-item ms-lg-3">
+                    <a class="nav-link" href="customer_login.php"><i class="fas fa-user me-1"></i> Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="customer_register.php">Register</a>
+                </li>
+                <?php endif; ?>
+
+                <?php if ($is_admin): ?>
                 <!-- Admin Management Dropdown -->
                 <li class="nav-item dropdown ms-lg-3 admin-menu-wrapper">
-     <a class="nav-link dropdown-toggle admin-btn" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-user-shield me-1"></i> Admin
-       </a>
-      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="adminDropdown">
-        
-        <li><a class="dropdown-item" href="admin/dashboard.php"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
-        <li><a class="dropdown-item" href="admin/menu.php"><i class="fas fa-utensils me-2"></i> Manage Menu</a></li>
-        <li><a class="dropdown-item" href="admin/reservation.php"><i class="fas fa-calendar-check me-2"></i> Reservations</a></li>
-        <li><a class="dropdown-item" href="admin/our-chefs.php"><i class="fas fa-user-tie me-2"></i> Our Chefs</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item text-danger" href="admin/logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-       </ul>
-       </li>
+                    <a class="nav-link dropdown-toggle admin-btn" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-shield me-1"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" href="admin/dashboard.php"><i class="fas fa-chart-line me-2"></i> Dashboard</a></li>
+                        <li><a class="dropdown-item" href="admin/menu.php"><i class="fas fa-utensils me-2"></i> Manage Menu</a></li>
+                        <li><a class="dropdown-item" href="admin/reservation.php"><i class="fas fa-calendar-check me-2"></i> Reservations</a></li>
+                        <li><a class="dropdown-item" href="admin/our-chefs.php"><i class="fas fa-user-tie me-2"></i> Our Chefs</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="admin/logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                    </ul>
+                </li>
+                <?php endif; ?>
 
 
  </div>

@@ -6,11 +6,7 @@
  */
 
 // Database credentials
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'cafeapp');
-define('DB_PORT', 3308);
+require_once __DIR__ . '/db_config.php';
 
 // Create connection with custom port
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, '', DB_PORT);
@@ -58,9 +54,20 @@ $tables = array(
         `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
 
+    // Customers table for site users
+    "CREATE TABLE IF NOT EXISTS `customers` (
+        `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `name` VARCHAR(100) NOT NULL,
+        `email` VARCHAR(100) NOT NULL UNIQUE,
+        `phone` VARCHAR(20),
+        `password_hash` VARCHAR(255) NOT NULL,
+        `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci",
+
     // Orders table
     "CREATE TABLE IF NOT EXISTS `orders` (
         `id` INT AUTO_INCREMENT PRIMARY KEY,
+        `customer_id` INT NULL,
         `customer_name` VARCHAR(100) NOT NULL,
         `email` VARCHAR(100),
         `phone` VARCHAR(20),
@@ -157,6 +164,8 @@ $tables = array(
         `name` VARCHAR(100) NOT NULL,
         `email` VARCHAR(100) NOT NULL,
         `phone` VARCHAR(20),
+        `persons` VARCHAR(50),
+        `location` VARCHAR(100),
         `message` TEXT,
         `status` ENUM('new', 'processing', 'resolved') DEFAULT 'new',
         `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -170,5 +179,47 @@ foreach ($tables as $table) {
     }
 }
 
-echo "Database and tables created successfully!";
+$contact_columns = [
+    'persons' => "ALTER TABLE `contact_submissions` ADD COLUMN `persons` VARCHAR(50) NULL",
+    'location' => "ALTER TABLE `contact_submissions` ADD COLUMN `location` VARCHAR(100) NULL"
+];
+
+foreach ($contact_columns as $column => $alter_sql) {
+    $column_check = $conn->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'contact_submissions' AND COLUMN_NAME = ?");
+    if ($column_check) {
+        $db_name = DB_NAME;
+        $column_check->bind_param('ss', $db_name, $column);
+        $column_exists = 0;
+        if ($column_check->execute()) {
+            $column_check->bind_result($column_exists);
+            $column_check->fetch();
+        }
+        $column_check->close();
+        if ((int) $column_exists === 0) {
+            $conn->query($alter_sql);
+        }
+    }
+}
+
+$order_columns = [
+    'customer_id' => "ALTER TABLE `orders` ADD COLUMN `customer_id` INT NULL"
+];
+
+foreach ($order_columns as $column => $alter_sql) {
+    $column_check = $conn->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'orders' AND COLUMN_NAME = ?");
+    if ($column_check) {
+        $db_name = DB_NAME;
+        $column_check->bind_param('ss', $db_name, $column);
+        $column_exists = 0;
+        if ($column_check->execute()) {
+            $column_check->bind_result($column_exists);
+            $column_check->fetch();
+        }
+        $column_check->close();
+        if ((int) $column_exists === 0) {
+            $conn->query($alter_sql);
+        }
+    }
+}
+
 ?>

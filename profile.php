@@ -9,6 +9,7 @@ if (empty($_SESSION['customer_id'])) {
 }
 
 include 'admin/includes/db.php';
+include 'includes/user_layout.php';
 
 $customer_id = (int) $_SESSION['customer_id'];
 $profile_notice = '';
@@ -61,9 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-include 'includes/header.php';
-
-
 $stmt = $conn->prepare("SELECT id, name, email, phone, created_at FROM customers WHERE id = ? LIMIT 1");
 $stmt->bind_param('i', $customer_id);
 $stmt->execute();
@@ -76,12 +74,12 @@ $order_stmt->execute();
 $orders_result = $order_stmt->get_result();
 ?>
 
-<section class="py-5 customer-page">
-    <div class="container">
+<section class="py-5 user-page">
+    <div class="container" style="margin-top: 50px;">
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card customer-card">
-                    <div class="card-header customer-header">
+                <div class="card user-card">
+                    <div class="card-header user-card-header">
                         <h5 class="mb-0">My Profile</h5>
                         <span class="text-gold small">Account overview</span>
                     </div>
@@ -100,8 +98,8 @@ $orders_result = $order_stmt->get_result();
                         </div>
                     </div>
                 </div>
-                <div class="card customer-card mt-4">
-                    <div class="card-header customer-header">
+                <div class="card user-card mt-4">
+                    <div class="card-header user-card-header">
                         <h5 class="mb-0">Edit Profile</h5>
                         <span class="text-gold small">Update your details</span>
                     </div>
@@ -134,8 +132,8 @@ $orders_result = $order_stmt->get_result();
                 </div>
             </div>
             <div class="col-lg-8">
-                <div class="card customer-card">
-                    <div class="card-header customer-header">
+                <div class="card user-card">
+                    <div class="card-header user-card-header">
                         <h5 class="mb-0">Order History</h5>
                         <span class="text-gold small">Track your orders</span>
                     </div>
@@ -225,120 +223,6 @@ $orders_result = $order_stmt->get_result();
         </div>
     </div>
 </section>
-
-<style>
-    .customer-page {
-        background: linear-gradient(180deg, rgba(253, 248, 240, 0.7), rgba(255, 255, 255, 1));
-        padding-top: 96px;
-    }
-
-    @media (max-width: 991px) {
-        .customer-page {
-            padding-top: 80px;
-        }
-    }
-
-    .customer-card {
-        border: 1px solid rgba(197, 160, 89, 0.2);
-        border-radius: 16px;
-        box-shadow: 0 12px 30px rgba(22, 22, 22, 0.08);
-    }
-
-    .customer-header {
-        background: #1f1f1f;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .customer-card .card-body {
-        padding: 24px;
-    }
-
-    .customer-card .form-control,
-    .customer-card .form-select {
-        border-radius: 10px;
-        border-color: rgba(197, 160, 89, 0.35);
-    }
-
-    .customer-card .form-control:focus,
-    .customer-card .form-select:focus {
-        border-color: #c5a059;
-        box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.2);
-    }
-
-    .btn-outline-gold {
-        color: #c5a059;
-        border: 1px solid #c5a059;
-        background: transparent;
-    }
-
-    .btn-outline-gold:hover,
-    .btn-outline-gold:focus {
-        color: #111;
-        background: #c5a059;
-        border-color: #c5a059;
-        box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.2);
-    }
-
-    .customer-card .table thead th {
-        background: rgba(197, 160, 89, 0.1);
-    }
-
-    .status-badge {
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        text-transform: capitalize;
-    }
-
-    .status-pending {
-        background: rgba(255, 193, 7, 0.2);
-        color: #b98600;
-    }
-
-    .status-confirmed,
-    .status-ready {
-        background: rgba(13, 110, 253, 0.15);
-        color: #0d6efd;
-    }
-
-    .status-preparing {
-        background: rgba(111, 66, 193, 0.15);
-        color: #6f42c1;
-    }
-
-    .status-completed {
-        background: rgba(25, 135, 84, 0.15);
-        color: #198754;
-    }
-
-    .status-cancelled,
-    .status-rejected {
-        background: rgba(220, 53, 69, 0.15);
-        color: #dc3545;
-    }
-
-    .order-detail {
-        background: rgba(197, 160, 89, 0.08);
-        border-radius: 12px;
-        padding: 16px;
-    }
-
-    .detail-label {
-        font-weight: 600;
-        margin-bottom: 6px;
-        color: #444;
-    }
-
-    .detail-value {
-        margin-bottom: 4px;
-        color: #555;
-    }
-</style>
 
 <?php
 $order_stmt->close();

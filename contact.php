@@ -1,5 +1,16 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/navbar.php'; ?>
+<?php 
+include 'includes/header.php'; 
+include 'includes/navbar.php';
+
+$success = $_GET['success'] ?? '';
+$error = $_GET['error'] ?? '';
+$name = $_GET['name'] ?? '';
+$email = $_GET['email'] ?? '';
+$phone = $_GET['phone'] ?? '';
+$persons = $_GET['persons'] ?? '';
+$location = $_GET['location'] ?? '';
+$message = $_GET['message'] ?? '';
+?>
 
 <!-- Hero Section -->
 <header class="hero-wrapper" style="background-image: url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1600&q=80');">
@@ -78,42 +89,60 @@
             <!-- Right Side: Dark Form -->
             <div class="col-lg-6">
                 <div class="contact-form-wrapper rounded">
-                    <form action="#" method="POST">
+                    <?php if ($success): ?>
+                        <div class="alert alert-success alert-dismissible fade show">
+                            <?= $success ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($error): ?>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <?= $error ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="save_contact.php">
                         <div class="mb-3">
-                            <label class="form-label text-white fw-bold">Full Name</label>
-                            <input type="text" class="form-control contact-input" placeholder="Enter full name">
+                            <label class="form-label text-white fw-bold">Full Name *</label>
+                            <input type="text" class="form-control contact-input" name="name" placeholder="Enter full name" value="<?= htmlspecialchars($name) ?>" required>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label text-white fw-bold">Email</label>
-                                <input type="email" class="form-control contact-input" placeholder="Enter email">
+                                <label class="form-label text-white fw-bold">Email *</label>
+                                <input type="email" class="form-control contact-input" name="email" placeholder="Enter email" value="<?= htmlspecialchars($email) ?>" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-white fw-bold">Phone</label>
-                                <input type="text" class="form-control contact-input" placeholder="Enter phone number">
+                                <label class="form-label text-white fw-bold">Phone *</label>
+                                <input type="tel" class="form-control contact-input" name="phone" placeholder="Enter phone number" value="<?= htmlspecialchars($phone) ?>" required>
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label text-white fw-bold">Person</label>
-                                <select class="form-select contact-input">
-                                    <option>2 Persons</option>
-                                    <option>3 Persons</option>
-                                    <option>4+ Persons</option>
+                                <label class="form-label text-white fw-bold">Persons</label>
+                                <select class="form-select contact-input" name="persons">
+                                    <option value="">Select</option>
+                                    <option value="2" <?= $persons === '2' ? 'selected' : '' ?>>2 Persons</option>
+                                    <option value="3" <?= $persons === '3' ? 'selected' : '' ?>>3 Persons</option>
+                                    <option value="4+" <?= $persons === '4+' ? 'selected' : '' ?>>4+ Persons</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-white fw-bold">Location</label>
-                                <select class="form-select contact-input">
-                                    <option>USA</option>
-                                    <option>UK</option>
-                                    <option>Canada</option>
+                                <select class="form-select contact-input" name="location">
+                                    <option value="">Select Location</option>
+                                    <option value="USA" <?= $location === 'USA' ? 'selected' : '' ?>>USA</option>
+                                    <option value="UK" <?= $location === 'UK' ? 'selected' : '' ?>>UK</option>
+                                    <option value="Canada" <?= $location === 'Canada' ? 'selected' : '' ?>>Canada</option>
+                                    <option value="India" <?= $location === 'India' ? 'selected' : '' ?>>India</option>
+                                    <option value="Other" <?= $location === 'Other' ? 'selected' : '' ?>>Other</option>
                                 </select>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label text-white fw-bold">Message</label>
-                            <textarea class="form-control contact-input" rows="4" placeholder="Writing Message..."></textarea>
+                            <label class="form-label text-white fw-bold">Message *</label>
+                            <textarea class="form-control contact-input" name="message" rows="4" placeholder="Writing Message..." required><?= htmlspecialchars($message) ?></textarea>
                         </div>
                         <button type="submit" class="btn btn-reservation w-100 py-3">SUBMIT REQUEST</button>
                     </form>

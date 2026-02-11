@@ -1,0 +1,8 @@
+- [x] Create admin/dashboard.php with basic dashboard content including stats
+- [x] Create admin/categories.php with basic categories management page
+- [x] Create admin/staff.php with basic staff management page
+- [x] Create admin/payments.php with basic payments page
+- [x] Create admin/settings.php with basic settings page
+- [x] Create admin/login.php with simple login form
+- [x] Update admin/logout.php to redirect to login.php
+- [x] Update includes/navbar.php logout link to admin/login.php
