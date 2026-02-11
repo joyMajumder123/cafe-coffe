@@ -10,6 +10,7 @@ if (empty($_SESSION['customer_id'])) {
 
 include 'admin/includes/db.php';
 require_once 'includes/customer_meta.php';
+require_once 'includes/recommendations.php';
 include 'includes/user_layout.php';
 
 $customer_id = (int) $_SESSION['customer_id'];
@@ -73,6 +74,9 @@ $order_stmt = $conn->prepare('SELECT * FROM orders WHERE customer_id = ? ORDER B
 $order_stmt->bind_param('i', $customer_id);
 $order_stmt->execute();
 $orders_result = $order_stmt->get_result();
+$orders = $orders_result ? $orders_result->fetch_all(MYSQLI_ASSOC) : [];
+$order_stmt->close();
+$recommendations = fetch_customer_recommendations($conn, $orders, 4);
 
 ensure_customer_meta_tables($conn);
 ensure_address_has_default($conn, $customer_id);
@@ -106,6 +110,11 @@ $status_detail_map = [
     'completed' => 'Completed at the counter',
     'delivered' => 'Delivered. Enjoy your meal!',
     'cancelled' => 'This order was cancelled',
+];
+$recommendation_reason_meta = [
+    'favorite' => ['label' => 'You order this often', 'class' => 'bg-warning text-dark'],
+    'category' => ['label' => 'Similar to your picks', 'class' => 'bg-info text-dark'],
+    'trending' => ['label' => 'Popular this week', 'class' => 'bg-secondary text-white'],
 ];
 ?>
 
@@ -169,6 +178,55 @@ $status_detail_map = [
             </div>
 
             <div class="col-lg-8">
+                <div class="card user-card mb-4">
+                    <div class="card-header user-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <h5 class="mb-0">Recommended For You</h5>
+                            <span class="text-gold small">Personalized picks from your activity</span>
+                        </div>
+                        <a href="menulist.php" class="btn btn-outline-gold btn-sm">Browse Menu</a>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($recommendations)): ?>
+                            <div class="row g-3 align-items-stretch">
+                                <?php foreach ($recommendations as $recommendation): ?>
+                                    <?php
+                                        $reason_key = $recommendation['reason'] ?? 'trending';
+                                        $reason_meta = $recommendation_reason_meta[$reason_key] ?? $recommendation_reason_meta['trending'];
+                                        $data_price = number_format((float) ($recommendation['price'] ?? 0), 2, '.', '');
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="recommendation-card border rounded h-100 d-flex flex-column p-3">
+                                            <div class="ratio ratio-16x9 mb-3 rounded overflow-hidden bg-light">
+                                                <img src="<?php echo htmlspecialchars($recommendation['image']); ?>" alt="<?php echo htmlspecialchars($recommendation['name']); ?>" class="w-100 h-100" style="object-fit: cover;">
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                                                <h6 class="mb-0"><?php echo htmlspecialchars($recommendation['name']); ?></h6>
+                                                <span class="badge <?php echo $reason_meta['class']; ?>"><?php echo htmlspecialchars($reason_meta['label']); ?></span>
+                                            </div>
+                                            <p class="text-muted small mb-2 flex-grow-1">
+                                                <?php echo htmlspecialchars($recommendation['summary'] ?: $recommendation['description']); ?>
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <strong class="text-gold">₹<?php echo number_format((float) $recommendation['price'], 2); ?></strong>
+                                                <button type="button" class="btn btn-sm btn-outline-gold add-rec-to-cart" data-menu-id="<?php echo (int) $recommendation['id']; ?>" data-menu-name="<?php echo htmlspecialchars($recommendation['name']); ?>" data-menu-price="<?php echo $data_price; ?>">Add to cart</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                                <div>
+                                    <h6 class="mb-1">No picks yet</h6>
+                                    <p class="text-muted small mb-0">Place an order to unlock personalized dishes tailored to you.</p>
+                                </div>
+                                <a href="menulist.php" class="btn btn-gold btn-sm">Start exploring</a>
+                            </div>
+                        <?php endif; ?>
+                        <div class="small mt-3 text-success d-none" id="recommendations-feedback"></div>
+                    </div>
+                </div>
                 <div class="card user-card mb-4">
                     <div class="card-header user-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
@@ -306,7 +364,7 @@ $status_detail_map = [
                         <span class="text-gold small">Track your orders</span>
                     </div>
                     <div class="card-body">
-                        <?php if ($orders_result && $orders_result->num_rows > 0): ?>
+                        <?php if (!empty($orders)): ?>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
                                     <thead>
@@ -321,7 +379,7 @@ $status_detail_map = [
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php while ($order = $orders_result->fetch_assoc()): ?>
+                                        <?php foreach ($orders as $order): ?>
                                             <?php
                                             $items = json_decode($order['items'] ?? '[]', true);
                                             $item_summary = [];
@@ -396,7 +454,7 @@ $status_detail_map = [
                                                     </div>
                                                 </td>
                                             </tr>
-                                        <?php endwhile; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -436,6 +494,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    var recommendationButtons = document.querySelectorAll('.add-rec-to-cart');
+    var recommendationsFeedback = document.getElementById('recommendations-feedback');
+    var cartStorageKey = 'cafe_cart';
     var addressList = document.getElementById('address-list');
     var addAddressBtn = document.getElementById('add-address-btn');
     var addressFormPanel = document.getElementById('address-form-panel');
@@ -654,6 +715,76 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     };
 
+    var loadCartFromStorage = function () {
+        if (typeof window.localStorage === 'undefined') {
+            return [];
+        }
+        try {
+            var stored = JSON.parse(localStorage.getItem(cartStorageKey) || '[]');
+            return Array.isArray(stored) ? stored : [];
+        } catch (error) {
+            localStorage.removeItem(cartStorageKey);
+            return [];
+        }
+    };
+
+    var saveCartToStorage = function (items) {
+        if (typeof window.localStorage === 'undefined') {
+            return;
+        }
+        localStorage.setItem(cartStorageKey, JSON.stringify(items));
+    };
+
+    var handleRecommendationAdd = function (button) {
+        if (!button) {
+            return;
+        }
+        var id = parseInt(button.getAttribute('data-menu-id'), 10);
+        if (!id) {
+            return;
+        }
+        var name = button.getAttribute('data-menu-name') || 'Menu Item';
+        var price = parseFloat(button.getAttribute('data-menu-price')) || 0;
+        var cartItems = loadCartFromStorage();
+        var existing = null;
+        for (var i = 0; i < cartItems.length; i++) {
+            if (parseInt(cartItems[i].id, 10) === id) {
+                existing = cartItems[i];
+                break;
+            }
+        }
+        if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+            cartItems.push({ id: id, name: name, price: price, quantity: 1 });
+        }
+        saveCartToStorage(cartItems);
+        if (recommendationsFeedback) {
+            recommendationsFeedback.textContent = name + ' added to your cart.';
+            recommendationsFeedback.classList.remove('d-none', 'text-danger');
+            recommendationsFeedback.classList.add('text-success');
+            recommendationsFeedback.setAttribute('role', 'status');
+            setTimeout(function () {
+                recommendationsFeedback.classList.add('d-none');
+            }, 3000);
+        }
+        button.disabled = true;
+        var originalText = button.textContent;
+        button.textContent = 'Added';
+        setTimeout(function () {
+            button.disabled = false;
+            button.textContent = originalText;
+        }, 1500);
+    };
+
+    if (recommendationButtons && recommendationButtons.length) {
+        recommendationButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                handleRecommendationAdd(button);
+            });
+        });
+    }
+
     if (addAddressBtn) {
         addAddressBtn.addEventListener('click', function () {
             openAddressForm('add');
@@ -799,6 +930,5 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <?php
-$order_stmt->close();
 include 'includes/footer.php';
 ?>
