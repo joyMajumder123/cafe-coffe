@@ -201,8 +201,8 @@ $preferred_payment_method = $preferred_payment ?: 'cash';
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
-                <div class="card user-card">
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <div class="card user-card sticky-lg-top" style="top: 2rem;">
                     <div class="card-header user-card-header">
                         <h5 class="mb-0">Order Summary</h5>
                         <span class="text-gold small">Review before placing</span>

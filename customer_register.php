@@ -7,7 +7,7 @@ include 'admin/includes/db.php';
 
 $errors = [];
 $success = '';
-$redirect = $_GET['redirect'] ?? 'profile.php';
+$redirect = $_GET['redirect'] ?? 'index.php';
 if (!preg_match('/^[a-zA-Z0-9_\/-]+\.php$/', $redirect)) {
     $redirect = 'profile.php';
 }

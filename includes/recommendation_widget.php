@@ -79,10 +79,11 @@ $recommendations = fetch_customer_recommendations($conn, $recommendation_orders,
                                 <button
                                     type="button"
                                     class="btn btn-sm btn-outline-gold recommendation-add-btn"
-                                    data-widget-id="<?php echo htmlspecialchars($recommendation_widget_id); ?>"
-                                    data-menu-id="<?php echo (int) ($recommendation['id'] ?? 0); ?>"
-                                    data-menu-name="<?php echo htmlspecialchars($recommendation['name']); ?>"
-                                    data-menu-price="<?php echo $price_value; ?>"
+                                    data-add-to-cart
+                                    data-id="<?php echo (int) ($recommendation['id'] ?? 0); ?>"
+                                    data-name="<?php echo htmlspecialchars($recommendation['name']); ?>"
+                                    data-price="<?php echo $price_value; ?>"
+                                    data-feedback-target="<?php echo htmlspecialchars($recommendation_widget_id); ?>"
                                 >Add to cart</button>
                             </div>
                         </div>
@@ -102,94 +103,6 @@ $recommendations = fetch_customer_recommendations($conn, $recommendation_orders,
                 <?php endif; ?>
             </div>
         <?php endif; ?>
-        <div class="small mt-3 text-success d-none recommendation-feedback" data-recommendation-feedback="<?php echo htmlspecialchars($recommendation_widget_id); ?>"></div>
+        <div class="small mt-3 text-success d-none recommendation-feedback" data-cart-feedback="<?php echo htmlspecialchars($recommendation_widget_id); ?>"></div>
     </div>
 </div>
-<?php if (!defined('RECOMMENDATION_WIDGET_SCRIPT_EMITTED')): ?>
-<script>
-(function () {
-    if (window.recommendationWidgetInitialized) {
-        return;
-    }
-    window.recommendationWidgetInitialized = true;
-    var storageKey = 'cafe_cart';
-
-    var loadCart = function () {
-        if (typeof window.localStorage === 'undefined') {
-            return [];
-        }
-        try {
-            var stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            return Array.isArray(stored) ? stored : [];
-        } catch (error) {
-            localStorage.removeItem(storageKey);
-            return [];
-        }
-    };
-
-    var saveCart = function (items) {
-        if (typeof window.localStorage === 'undefined') {
-            return;
-        }
-        localStorage.setItem(storageKey, JSON.stringify(items));
-    };
-
-    var handleAdd = function (button) {
-        if (!button) {
-            return;
-        }
-        var id = parseInt(button.getAttribute('data-menu-id'), 10);
-        if (!id) {
-            return;
-        }
-        var name = button.getAttribute('data-menu-name') || 'Menu Item';
-        var price = parseFloat(button.getAttribute('data-menu-price')) || 0;
-        var widgetId = button.getAttribute('data-widget-id') || '';
-        var items = loadCart();
-        var existing = null;
-        for (var i = 0; i < items.length; i++) {
-            if (parseInt(items[i].id, 10) === id) {
-                existing = items[i];
-                break;
-            }
-        }
-        if (existing) {
-            existing.quantity = (existing.quantity || 1) + 1;
-        } else {
-            items.push({ id: id, name: name, price: price, quantity: 1 });
-        }
-        saveCart(items);
-
-        if (widgetId) {
-            var feedback = document.querySelector('[data-recommendation-feedback="' + widgetId + '"]');
-            if (feedback) {
-                feedback.textContent = name + ' added to your cart.';
-                feedback.classList.remove('d-none', 'text-danger');
-                feedback.classList.add('text-success');
-                feedback.setAttribute('role', 'status');
-                setTimeout(function () {
-                    feedback.classList.add('d-none');
-                }, 2500);
-            }
-        }
-
-        button.disabled = true;
-        var originalText = button.textContent;
-        button.textContent = 'Added';
-        setTimeout(function () {
-            button.disabled = false;
-            button.textContent = originalText;
-        }, 1500);
-    };
-
-    document.addEventListener('click', function (event) {
-        var trigger = event.target.closest('.recommendation-add-btn');
-        if (!trigger) {
-            return;
-        }
-        event.preventDefault();
-        handleAdd(trigger);
-    });
-})();
-</script>
-<?php define('RECOMMENDATION_WIDGET_SCRIPT_EMITTED', true); endif; ?>

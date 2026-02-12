@@ -90,3 +90,29 @@
         </div>
     </div>
 </footer>
+
+<div class="cart-toast" data-cart-notification aria-live="polite" aria-atomic="true"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var dynamicNav = document.querySelector('.navbar[data-nav-dynamic="true"]');
+    var applyNavState = function () {
+        if (!dynamicNav) {
+            return;
+        }
+        if (window.scrollY > 40) {
+            dynamicNav.classList.add('solid-bg');
+        } else {
+            dynamicNav.classList.remove('solid-bg');
+        }
+    };
+
+    if (dynamicNav) {
+        applyNavState();
+        window.addEventListener('scroll', applyNavState, { passive: true });
+    }
+});
+</script>
+<script src="assets/js/cart.js"></script>
+</body>
+</html>

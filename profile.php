@@ -85,32 +85,6 @@ $preferred_payment = fetch_customer_payment_preference($conn, $customer_id);
 
 $show_edit_form = ($profile_notice !== '' || $profile_error !== '');
 
-$status_progress_map = [
-    'pending'   => 10,
-    'confirmed' => 25,
-    'preparing' => 55,
-    'ready'     => 75,
-    'completed' => 90,
-    'delivered' => 100,
-];
-$status_title_map = [
-    'pending'   => 'Pending',
-    'confirmed' => 'Confirmed',
-    'preparing' => 'Preparing',
-    'ready'     => 'Ready',
-    'completed' => 'Completed',
-    'delivered' => 'Delivered',
-    'cancelled' => 'Cancelled',
-];
-$status_detail_map = [
-    'pending'   => 'Waiting for confirmation',
-    'confirmed' => 'Order confirmed, starting prep',
-    'preparing' => 'Kitchen is preparing your items',
-    'ready'     => 'Ready for pickup or dispatch',
-    'completed' => 'Completed at the counter',
-    'delivered' => 'Delivered. Enjoy your meal!',
-    'cancelled' => 'This order was cancelled',
-];
 $recommendation_reason_meta = [
     'favorite' => ['label' => 'You order this often', 'class' => 'bg-warning text-dark'],
     'category' => ['label' => 'Similar to your picks', 'class' => 'bg-info text-dark'],
@@ -359,108 +333,16 @@ $recommendation_reason_meta = [
                 </div>
 
                 <div class="card user-card">
-                    <div class="card-header user-card-header">
-                        <h5 class="mb-0">Order History</h5>
-                        <span class="text-gold small">Track your orders</span>
+                    <div class="card-header user-card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">Order History</h5>
+                            <span class="text-gold small">View every order in one place</span>
+                        </div>
+                        <span class="badge bg-light text-dark">New</span>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($orders)): ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Items</th>
-                                            <th>Total</th>
-                                            <th>Status</th>
-                                            <th>Progress</th>
-                                            <th>Date</th>
-                                            
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($orders as $order): ?>
-                                            <?php
-                                            $items = json_decode($order['items'] ?? '[]', true);
-                                            $item_summary = [];
-                                            if (is_array($items)) {
-                                                foreach ($items as $item) {
-                                                    if (!empty($item['name'])) {
-                                                        $qty = isset($item['quantity']) ? (int) $item['quantity'] : 1;
-                                                        $item_summary[] = $item['name'] . ' x ' . $qty;
-                                                    }
-                                                }
-                                            }
-                                            $status_key = strtolower($order['status'] ?? '');
-                                            $status_class = preg_replace('/[^a-z0-9_-]/i', '', $status_key);
-                                            if ($status_class === '') {
-                                                $status_class = 'unknown';
-                                            }
-                                            $status_title = $status_title_map[$status_key] ?? ucfirst($status_key);
-                                            $status_detail = $status_detail_map[$status_key] ?? 'Status updated';
-                                            $progress_value = $status_progress_map[$status_key] ?? 0;
-                                            $is_cancelled = ($status_key === 'cancelled');
-                                            ?>
-                                            <tr data-order-row="<?php echo (int) $order['id']; ?>">
-                                                <td>#<?php echo (int) $order['id']; ?></td>
-                                                <td><?php echo htmlspecialchars(implode(', ', $item_summary)); ?></td>
-                                                <td>₹<?php echo number_format((float) $order['total_amount'], 2); ?></td>
-                                                <td>
-                                                    <span class="badge status-badge status-<?php echo htmlspecialchars($status_class); ?> order-status-badge" data-order-id="<?php echo (int) $order['id']; ?>">
-                                                        <?php echo htmlspecialchars($status_title ?: 'Pending'); ?>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <?php if ($is_cancelled): ?>
-                                                        <span class="text-danger fw-semibold">Cancelled</span>
-                                                    <?php else: ?>
-                                                        <div class="progress order-progress" data-order-progress="<?php echo (int) $order['id']; ?>">
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: <?php echo (int) $progress_value; ?>%" aria-valuenow="<?php echo (int) $progress_value; ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                        <div class="small text-muted mt-1" data-order-stage="<?php echo (int) $order['id']; ?>"><?php echo htmlspecialchars($status_detail); ?></div>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td><?php echo htmlspecialchars(date('d M Y', strtotime($order['created_at']))); ?></td>
-                                                
-                                            </tr>
-                                            <tr class="collapse" id="order-<?php echo (int) $order['id']; ?>">
-                                                <td colspan="7">
-                                                    <div class="order-detail">
-                                                        <div class="row g-3">
-                                                            <div class="col-md-6">
-                                                                <div class="detail-label">Delivery Address</div>
-                                                                <div class="detail-value"><?php echo htmlspecialchars($order['address'] ?: 'Not provided'); ?></div>
-                                                                <div class="detail-value"><?php echo htmlspecialchars($order['city'] ?: ''); ?></div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="detail-label">Order Summary</div>
-                                                                <div class="detail-value">Subtotal: ₹<?php echo number_format((float) $order['subtotal'], 2); ?></div>
-                                                                <div class="detail-value">Delivery: ₹<?php echo number_format((float) $order['delivery_charge'], 2); ?></div>
-                                                                <div class="detail-value">Tax: ₹<?php echo number_format((float) $order['tax'], 2); ?></div>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <div class="detail-label">Items</div>
-                                                                <ul class="mb-0">
-                                                                    <?php if (is_array($items) && !empty($items)): ?>
-                                                                        <?php foreach ($items as $item): ?>
-                                                                            <li><?php echo htmlspecialchars($item['name'] ?? 'Item'); ?> x <?php echo (int) ($item['quantity'] ?? 1); ?></li>
-                                                                        <?php endforeach; ?>
-                                                                    <?php else: ?>
-                                                                        <li>No item details found.</li>
-                                                                    <?php endif; ?>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php else: ?>
-                            <div class="text-muted">No orders yet.</div>
-                        <?php endif; ?>
+                        <p class="text-muted mb-3">Need to review a past order or track what is on the way? Head over to your dedicated Order History page for live updates, invoices, and delivery details.</p>
+                        <a href="order_history.php" class="btn btn-gold">Go to Order History</a>
                     </div>
                 </div>
             </div>
@@ -851,81 +733,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    var statusBadges = document.querySelectorAll('.order-status-badge');
-    if (!statusBadges.length) {
-        return;
-    }
-
-    var statusTitleMap = <?php echo json_encode($status_title_map, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-    var statusDetailMap = <?php echo json_encode($status_detail_map, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-    var statusProgressMap = <?php echo json_encode($status_progress_map, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-
-    var formatTitle = function (status) {
-        if (!status) return '';
-        return statusTitleMap[status] || status.charAt(0).toUpperCase() + status.slice(1);
-    };
-
-    var updateOrderVisuals = function (orderId, status) {
-        if (!orderId || !status) return;
-        status = String(status).toLowerCase();
-        var badge = document.querySelector('.order-status-badge[data-order-id="' + orderId + '"]');
-        if (badge) {
-            badge.textContent = formatTitle(status);
-            badge.className = 'badge status-badge status-' + status + ' order-status-badge';
-        }
-
-        var progressWrapper = document.querySelector('[data-order-progress="' + orderId + '"]');
-        var stageLabel = document.querySelector('[data-order-stage="' + orderId + '"]');
-
-        if (progressWrapper) {
-            if (status === 'cancelled') {
-                progressWrapper.innerHTML = '<span class="text-danger fw-semibold">Cancelled</span>';
-                if (stageLabel) {
-                    stageLabel.textContent = statusDetailMap[status] || 'This order was cancelled';
-                    stageLabel.classList.add('text-danger');
-                }
-            } else {
-                var bar = progressWrapper.querySelector('.progress-bar');
-                if (bar) {
-                    var pct = statusProgressMap[status];
-                    bar.style.width = (typeof pct === 'number' ? pct : 0) + '%';
-                    bar.setAttribute('aria-valuenow', typeof pct === 'number' ? pct : 0);
-                }
-                if (stageLabel) {
-                    stageLabel.textContent = statusDetailMap[status] || 'Status updated';
-                    stageLabel.classList.remove('text-danger');
-                }
-            }
-        }
-    };
-
-    var pollStatuses = function () {
-        fetch('order_status.php', { credentials: 'same-origin' })
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error('Unable to fetch order statuses');
-                }
-                return response.json();
-            })
-            .then(function (payload) {
-                if (!payload || !Array.isArray(payload.orders)) {
-                    return;
-                }
-                payload.orders.forEach(function (order) {
-                    if (!order || typeof order.id === 'undefined') {
-                        return;
-                    }
-                    var currentStatus = order.status ? String(order.status).toLowerCase() : '';
-                    updateOrderVisuals(order.id, currentStatus);
-                });
-            })
-            .catch(function (error) {
-                console.warn('Order status refresh failed:', error);
-            });
-    };
-
-    pollStatuses();
-    setInterval(pollStatuses, 20000);
 });
 </script>
 
