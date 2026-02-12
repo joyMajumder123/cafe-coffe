@@ -385,7 +385,7 @@ $preferred_payment_method = $preferred_payment ?: 'cash';
                         '<span>' + item.name + ' x ' + item.quantity + '</span>' +
                         '<button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="' + index + '">+</button>' +
                     '</div>' +
-                    '<span>$' + (item.price * item.quantity).toFixed(2) + '</span>' +
+                    '<span>₹' + (item.price * item.quantity).toFixed(2) + '</span>' +
                     '<button class="btn btn-sm btn-outline-danger" data-action="remove" data-index="' + index + '">Remove</button>';
                 list.appendChild(li);
             });

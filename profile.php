@@ -404,7 +404,7 @@ $recommendation_reason_meta = [
                                             <tr data-order-row="<?php echo (int) $order['id']; ?>">
                                                 <td>#<?php echo (int) $order['id']; ?></td>
                                                 <td><?php echo htmlspecialchars(implode(', ', $item_summary)); ?></td>
-                                                <td>$<?php echo number_format((float) $order['total_amount'], 2); ?></td>
+                                                <td>₹<?php echo number_format((float) $order['total_amount'], 2); ?></td>
                                                 <td>
                                                     <span class="badge status-badge status-<?php echo htmlspecialchars($status_class); ?> order-status-badge" data-order-id="<?php echo (int) $order['id']; ?>">
                                                         <?php echo htmlspecialchars($status_title ?: 'Pending'); ?>
@@ -434,9 +434,9 @@ $recommendation_reason_meta = [
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="detail-label">Order Summary</div>
-                                                                <div class="detail-value">Subtotal: $<?php echo number_format((float) $order['subtotal'], 2); ?></div>
-                                                                <div class="detail-value">Delivery: $<?php echo number_format((float) $order['delivery_charge'], 2); ?></div>
-                                                                <div class="detail-value">Tax: $<?php echo number_format((float) $order['tax'], 2); ?></div>
+                                                                <div class="detail-value">Subtotal: ₹<?php echo number_format((float) $order['subtotal'], 2); ?></div>
+                                                                <div class="detail-value">Delivery: ₹<?php echo number_format((float) $order['delivery_charge'], 2); ?></div>
+                                                                <div class="detail-value">Tax: ₹<?php echo number_format((float) $order['tax'], 2); ?></div>
                                                             </div>
                                                             <div class="col-12">
                                                                 <div class="detail-label">Items</div>

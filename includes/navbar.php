@@ -32,7 +32,7 @@ $customer_name = $_SESSION['customer_name'] ?? 'Profile';
                 <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" href="about.php">About Us</a></li>
 
                 <!-- Menu  -->
-                <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" href="menugrid.php">Menu</a></li>
+                <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'menulist.php') ? 'active' : ''; ?>" href="menulist.php">Menu</a></li>
                       
                 <!-- Pages Dropdown -->
                 <li class="nav-item dropdown">

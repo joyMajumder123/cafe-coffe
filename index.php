@@ -1,11 +1,34 @@
 <?php
-include 'admin/includes/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+require_once 'admin/includes/db.php';
+require_once 'includes/recommendations.php';
 
 $menu_items = [];
 $menu_result = $conn->query("SELECT id, name, description, category, price, image FROM menu_items WHERE status = 'active' ORDER BY created_at DESC");
 if ($menu_result) {
     while ($row = $menu_result->fetch_assoc()) {
         $menu_items[] = $row;
+    }
+}
+
+$customer_orders = [];
+if (!empty($_SESSION['customer_id'])) {
+    $customer_id = (int) $_SESSION['customer_id'];
+    $order_stmt = $conn->prepare('SELECT id, items FROM orders WHERE customer_id = ? ORDER BY created_at DESC LIMIT 20');
+    if ($order_stmt) {
+        $order_stmt->bind_param('i', $customer_id);
+        if ($order_stmt->execute()) {
+            $order_result = $order_stmt->get_result();
+            if ($order_result) {
+                while ($order = $order_result->fetch_assoc()) {
+                    $customer_orders[] = $order;
+                }
+            }
+        }
+        $order_stmt->close();
     }
 }
 
@@ -73,7 +96,7 @@ include 'includes/navbar.php';
                                 <h1 class="display-2 mb-4 animate-up delay-1">Experience Pure Pleasure on <span class="italic">Every Plate</span></h1>
                                 <p class="lead mb-5 animate-up delay-2">Artfully prepared dishes, fresh ingredients, and bold flavors that awaken your senses.</p>
                                 <div class="animate-up delay-3">
-                                    <a href="menugrid.php" class="btn btn-gold btn-lg me-3">Explore Menu</a>
+                                    <a href="menulist.php" class="btn btn-gold btn-lg me-3">Explore Menu</a>
                                     <a href="contact.php" class="btn btn-outline-light btn-lg">Book A Table</a>
                                 </div>
                             </div>
@@ -93,7 +116,7 @@ include 'includes/navbar.php';
                                 <h1 class="display-2 mb-4 animate-up delay-1">Traditional Taste <br><span class="italic">Modern Twist</span></h1>
                                 <p class="lead mb-5 animate-up delay-2">We bring you the authentic flavors of Italy served with a contemporary touch.</p>
                                 <div class="animate-up delay-3">
-                                    <a href="menugrid.php" class="btn btn-gold btn-lg me-3">View Menu</a>
+                                    <a href="menulist.php" class="btn btn-gold btn-lg me-3">View Menu</a>
                                     <a href="contact.php" class="btn btn-outline-light btn-lg">Reservation</a>
                                 </div>
                             </div>
@@ -223,6 +246,26 @@ include 'includes/navbar.php';
     </div>
 </section>
 
+<section class="py-5 bg-light">
+    <div class="container">
+        <?php
+            $recommendation_orders = $customer_orders;
+            $recommendation_widget_title = 'Recommended Today';
+            $recommendation_widget_subtitle = 'Fresh picks inspired by your recent cravings';
+            $recommendation_widget_id = 'home-recommendations';
+            $recommendation_widget_primary_cta = '<a href="menulist.php" class="btn btn-outline-gold btn-sm">See full menu</a>';
+            include 'includes/recommendation_widget.php';
+            unset(
+                $recommendation_orders,
+                $recommendation_widget_title,
+                $recommendation_widget_subtitle,
+                $recommendation_widget_id,
+                $recommendation_widget_primary_cta
+            );
+        ?>
+    </div>
+</section>
+
 <!-- NEW: Booking / Reservation Section -->
 <section class="booking-section">
     <div class="container">
@@ -306,7 +349,7 @@ include 'includes/navbar.php';
                         '<span>' + item.name + ' x ' + item.quantity + '</span>' +
                         '<button class="btn btn-sm btn-outline-secondary" data-action="increase" data-index="' + index + '">+</button>' +
                     '</div>' +
-                    '<span>$' + (item.price * item.quantity).toFixed(2) + '</span>' +
+                    '<span>₹' + (item.price * item.quantity).toFixed(2) + '</span>' +
                     '<button class="btn btn-sm btn-outline-danger ms-2" data-action="remove" data-index="' + index + '">Remove</button>';
                 list.appendChild(li);
             });

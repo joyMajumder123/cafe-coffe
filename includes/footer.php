@@ -32,7 +32,7 @@
                             <ul>
                                 <li><a href="about.php">About Us</a></li>
                                 <li><a href="chefs.php">Our Team</a></li>
-                                <li><a href="menugrid.php">Our Menu</a></li>
+                                <li><a href="menulist.php">Our Menu</a></li>
                                 <li><a href="blog.php">Our Blog</a></li>
                                 <li><a href="contact.php">Contact</a></li>
                             </ul>
