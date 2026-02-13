@@ -2,6 +2,16 @@
 /**
  * Utility helpers for managing customer addresses and payment preferences.
  */
+if (!function_exists('cafe_normalize_category_slug')) {
+    function cafe_normalize_category_slug(string $label): string
+    {
+        $label = strtolower(trim($label));
+        $label = preg_replace('/[^a-z0-9]+/', '-', $label);
+        $label = trim($label, '-');
+        return $label !== '' ? $label : 'general';
+    }
+}
+
 function ensure_customer_meta_tables(mysqli $conn): void
 {
     $conn->query(
@@ -26,10 +36,19 @@ function ensure_customer_meta_tables(mysqli $conn): void
         "CREATE TABLE IF NOT EXISTS customer_preferences (
             customer_id INT NOT NULL PRIMARY KEY,
             preferred_payment_method VARCHAR(30) NULL,
+            category_preferences TEXT NULL,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             CONSTRAINT fk_customer_preferences_customer FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
     );
+
+    $columnCheck = $conn->query("SHOW COLUMNS FROM customer_preferences LIKE 'category_preferences'");
+    if ($columnCheck && $columnCheck->num_rows === 0) {
+        $conn->query("ALTER TABLE customer_preferences ADD COLUMN category_preferences TEXT NULL AFTER preferred_payment_method");
+    }
+    if ($columnCheck instanceof mysqli_result) {
+        $columnCheck->free();
+    }
 }
 
 function fetch_customer_addresses(mysqli $conn, int $customer_id): array
@@ -104,4 +123,82 @@ function save_customer_payment_preference(mysqli $conn, int $customer_id, string
     $success = $stmt->execute();
     $stmt->close();
     return $success;
+}
+
+function fetch_customer_category_preferences(mysqli $conn, int $customer_id): array
+{
+    $stmt = $conn->prepare("SELECT category_preferences FROM customer_preferences WHERE customer_id = ? LIMIT 1");
+    $stmt->bind_param('i', $customer_id);
+    $stmt->execute();
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    $decoded = [];
+    if (!empty($row['category_preferences'])) {
+        $decoded = json_decode($row['category_preferences'], true);
+    }
+    if (!is_array($decoded)) {
+        return [];
+    }
+
+    $clean = [];
+    foreach ($decoded as $slug => $meta) {
+        $key = cafe_normalize_category_slug(is_string($slug) ? $slug : '');
+        if ($key === '') {
+            continue;
+        }
+        $label = '';
+        $score = 0;
+        if (is_array($meta)) {
+            $label = isset($meta['label']) ? trim((string) $meta['label']) : '';
+            $score = isset($meta['score']) ? (float) $meta['score'] : 0.0;
+        } elseif (is_numeric($meta)) {
+            $score = (float) $meta;
+        }
+        if ($label === '') {
+            $label = ucwords(str_replace('-', ' ', $key));
+        }
+        $clean[$key] = [
+            'label' => $label,
+            'score' => max($score, 0.0),
+        ];
+    }
+
+    return $clean;
+}
+
+function save_customer_category_preferences(mysqli $conn, int $customer_id, array $preferences): bool
+{
+    $encoded = json_encode($preferences, JSON_UNESCAPED_UNICODE);
+    $stmt = $conn->prepare("INSERT INTO customer_preferences (customer_id, category_preferences) VALUES (?, ?) ON DUPLICATE KEY UPDATE category_preferences = VALUES(category_preferences)");
+    $stmt->bind_param('is', $customer_id, $encoded);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}
+
+function record_customer_category_preference(mysqli $conn, int $customer_id, string $category_slug, string $category_label, float $weight = 1.0): bool
+{
+    $slug = cafe_normalize_category_slug($category_slug ?: $category_label);
+    if ($slug === '') {
+        return false;
+    }
+    $label = trim($category_label) !== '' ? trim($category_label) : ucwords(str_replace('-', ' ', $slug));
+    if ($label === '') {
+        $label = ucwords(str_replace('-', ' ', $slug));
+    }
+
+    $preferences = fetch_customer_category_preferences($conn, $customer_id);
+    $currentScore = $preferences[$slug]['score'] ?? 0;
+    $preferences[$slug] = [
+        'label' => $label,
+        'score' => min($currentScore + max($weight, 0.1), 25),
+    ];
+
+    uasort($preferences, function ($a, $b) {
+        return ($b['score'] ?? 0) <=> ($a['score'] ?? 0);
+    });
+
+    $trimmed = array_slice($preferences, 0, 12, true);
+    return save_customer_category_preferences($conn, $customer_id, $trimmed);
 }
