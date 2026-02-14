@@ -35,6 +35,7 @@ $recommendation_widget_id = $recommendation_widget_id ?? ('rec-widget-' . substr
 $recommendation_reason_meta = [
     'favorite' => ['label' => 'You order this often', 'class' => 'bg-warning text-dark'],
     'category' => ['label' => 'Similar picks', 'class' => 'bg-info text-dark'],
+    'taste' => ['label' => 'Inspired by your browsing', 'class' => 'bg-primary text-white'],
     'trending' => ['label' => 'Trending now', 'class' => 'bg-secondary text-white'],
 ];
 
