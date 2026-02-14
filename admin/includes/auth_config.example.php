@@ -8,7 +8,7 @@
 
 // Admin Credentials
 define('ADMIN_USERNAME', 'your_admin_username');
-// Store the hashed password here. Generate using: php -r "echo password_hash('your_password', PASSWORD_DEFAULT);"
+// Store the hashed password here. Generate using: php -r "echo password_hash('your_password', PASSWORD_DEFAULT) . PHP_EOL;"
 define('ADMIN_PASSWORD_HASH', 'your_password_hash_here');
 
 /**
@@ -18,7 +18,7 @@ define('ADMIN_PASSWORD_HASH', 'your_password_hash_here');
  *    cp admin/includes/auth_config.example.php admin/includes/auth_config.php
  * 
  * 2. Generate a password hash for your desired password:
- *    php -r "echo password_hash('YourSecurePassword', PASSWORD_DEFAULT);"
+ *    php -r "echo password_hash('YourSecurePassword', PASSWORD_DEFAULT) . PHP_EOL;"
  * 
  * 3. Edit auth_config.php:
  *    - Set ADMIN_USERNAME to your desired username

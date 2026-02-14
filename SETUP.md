@@ -41,7 +41,7 @@ cp admin/includes/auth_config.example.php admin/includes/auth_config.php
 **Generate a password hash** for your admin password:
 
 ```bash
-php -r "echo password_hash('YourSecurePassword', PASSWORD_DEFAULT);"
+php -r "echo password_hash('YourSecurePassword', PASSWORD_DEFAULT) . PHP_EOL;"
 ```
 
 Then edit `admin/includes/auth_config.php` with your admin credentials:
