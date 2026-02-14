@@ -86,8 +86,16 @@ Template files are provided:
 
 - All sensitive configuration files are excluded via `.gitignore`
 - Database credentials are stored separately from code
-- Admin credentials use configuration-based authentication
+- Admin credentials use secure password hashing (bcrypt)
 - Use strong passwords in production environments
+
+### Important Security Note
+
+**Git History:** If you've forked this repository, please note that previous commits may contain example credentials. These have been removed from the current codebase but may still exist in git history. For production use:
+
+1. Create a fresh repository without the history, or
+2. Use git-filter-repo or BFG Repo-Cleaner to remove sensitive data from history
+3. Always use strong, unique credentials for your deployment
 
 ## Contributing
 

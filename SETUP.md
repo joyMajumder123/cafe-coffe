@@ -76,6 +76,14 @@ define('ADMIN_PASSWORD_HASH', 'generated_hash_from_above');
 
 These files are already listed in `.gitignore` to prevent accidental commits.
 
+### Git History Warning
+
+If you're working with a fork or clone of this repository, be aware that older commits may contain example or test credentials in the git history. For production deployments:
+
+1. Generate new, strong credentials that have never been committed
+2. Consider creating a fresh repository without history for production
+3. Never reuse any credentials that may have been in the repository history
+
 ## Troubleshooting
 
 ### Database Connection Issues
