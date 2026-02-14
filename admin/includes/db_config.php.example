@@ -1,0 +1,23 @@
+<?php
+/**
+ * Database Configuration File
+ * 
+ * Copy this file to db_config.php and update with your database credentials.
+ * The db_config.php file is ignored by git to keep your credentials secure.
+ */
+
+// Database host (usually localhost)
+define('DB_HOST', 'localhost');
+
+// Database username (default: root for XAMPP)
+define('DB_USER', 'root');
+
+// Database password (default: empty for XAMPP)
+define('DB_PASS', '');
+
+// Database name (will be created automatically)
+define('DB_NAME', 'cafe_db');
+
+// Database port (default: 3306 for MySQL)
+define('DB_PORT', 3306);
+?>

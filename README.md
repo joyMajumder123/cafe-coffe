@@ -46,26 +46,22 @@ git clone https://github.com/joyMajumder123/cafe-coffe.git
 
 
 2. **Database Configuration**
-* Open **phpMyAdmin**.
-* Create a new database named `cafe_db`.
-
-
-
-3. **Connect the App**
-* Open `config/db_connect.php` (or your equivalent connection file).
-* Update your credentials:
-
+* Create a configuration file at `admin/includes/db_config.php` with your database credentials:
 
 ```php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "cafe_db";
-
+<?php
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'cafe_db');
+define('DB_PORT', 3306);
+?>
 ```
 
+* **Note:** The database `cafe_db` will be created automatically when you first run the application.
 
-4. **Run the Application**
+
+3. **Run the Application**
 * Move the project folder to your server's root directory (e.g., `htdocs`).
 * Open your browser and navigate to `http://localhost/cafe-coffe`.
 
