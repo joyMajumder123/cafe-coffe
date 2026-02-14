@@ -74,8 +74,8 @@ $dbname = "cafe_db";
 ---
 
 ## 📸 Screenshots
-> * *Home Page* <img width="1850" height="889" alt="image" src="https://github.com/user-attachments/assets/5661c7d1-cbde-481d-a10c-011a2dbbb46c" />
->
+*Home Page*
+<img width="1850" height="889" alt="Home Page" src="https://github.com/user-attachments/assets/5661c7d1-cbde-481d-a10c-011a2dbbb46c" />
 
 ## 🤝 Contributing
 
