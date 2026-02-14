@@ -38,14 +38,23 @@ Create the admin authentication configuration file:
 cp admin/includes/auth_config.example.php admin/includes/auth_config.php
 ```
 
+**Generate a password hash** for your admin password:
+
+```bash
+php -r "echo password_hash('YourSecurePassword', PASSWORD_DEFAULT);"
+```
+
 Then edit `admin/includes/auth_config.php` with your admin credentials:
 
 ```php
 define('ADMIN_USERNAME', 'your_admin_username');
-define('ADMIN_PASSWORD', 'your_secure_password');
+define('ADMIN_PASSWORD_HASH', 'generated_hash_from_above');
 ```
 
-**IMPORTANT:** Use a strong password, especially in production environments!
+**IMPORTANT:** 
+- Use a strong password, especially in production environments!
+- The password hash should look like: `$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi`
+- Never store plain text passwords
 
 ## First Run
 

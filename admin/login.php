@@ -8,8 +8,8 @@ if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    // Validate credentials from configuration
-    if ($username == ADMIN_USERNAME && $password == ADMIN_PASSWORD) {
+    // Validate credentials from configuration using secure password verification
+    if ($username == ADMIN_USERNAME && password_verify($password, ADMIN_PASSWORD_HASH)) {
         $_SESSION['admin'] = true;
         header("Location: dashboard.php");
         exit();
