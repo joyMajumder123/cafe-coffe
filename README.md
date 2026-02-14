@@ -67,7 +67,7 @@ $dbname = "cafe_db";
 
 4. **Run the Application**
 * Move the project folder to your server's root directory (e.g., `htdocs`).
-* Open your browser and navigate to `http://localhost/cafe-app`.
+* Open your browser and navigate to `http://localhost/cafe-coffe`.
 
 
 
