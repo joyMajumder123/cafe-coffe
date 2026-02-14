@@ -1,97 +1,116 @@
+# Cafe Coffee ☕
 
+A web-based cafe management system for ordering coffee and food items online.
 
-# ☕ Brew & Bite Cafe Management System
+## Features
 
-A lightweight, responsive web application designed to streamline cafe operations. From browsing the menu to managing orders, this app provides a seamless experience for both customers and staff.
+- 🛒 Online menu and ordering system
+- 👤 Customer registration and authentication
+- 📦 Order tracking and history
+- 👨‍🍳 Chef profiles
+- 📊 Admin dashboard for managing orders, menu items, and reservations
+- 💳 Multiple payment options
+- 🎨 Responsive design with Bootstrap
 
-##  Features
+## Quick Start
 
-* **🛒 Digital Menu:** Categorized food and beverage listings with real-time pricing.
-* **📱 Responsive UI:** Built with **Bootstrap**, ensuring the app looks great on mobile, tablet, and desktop.
-* **🔐 User Authentication:** Secure login and registration for customers and administrators.
-* **📋 Order Management:** (Admin) Track, update, and manage incoming customer orders.
-* **📂 Inventory Dashboard:** (Admin) Add, edit, or remove menu items and update it.
-* **💌 Contact & Feedback:** Integrated form for customer inquiries and reviews.
+### Prerequisites
 
----
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Web server (Apache/Nginx) or XAMPP/WAMP
 
-## 🛠️ Tech Stack
+### Installation
 
-| Layer | Technology |
-| --- | --- |
-| **Frontend** | HTML5, CSS3, **Bootstrap 5**, JavaScript |
-| **Backend** | **PHP** (Procedural or OOP) |
-| **Database** | **MySQL** / MariaDB |
-| **Server** | Apache (XAMPP / WAMP / MAMP) |
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/joyMajumder123/cafe-coffe.git
+   cd cafe-coffe
+   ```
 
----
+2. **Configure the application**
+   
+   See [SETUP.md](SETUP.md) for detailed configuration instructions.
+   
+   Quick setup:
+   ```bash
+   # Copy example configuration files
+   cp admin/includes/db_config.example.php admin/includes/db_config.php
+   cp admin/includes/auth_config.example.php admin/includes/auth_config.php
+   
+   # Edit the configuration files with your credentials
+   ```
 
-## 📋 Prerequisites
+3. **Start your web server**
+   
+   Point your web server document root to the project directory, or if using XAMPP:
+   - Copy project to `htdocs/cafe-coffe`
+   - Start Apache and MySQL services
 
-Before you begin, ensure you have the following installed:
+4. **Access the application**
+   
+   - Main site: `http://localhost/cafe-coffe/`
+   - Admin panel: `http://localhost/cafe-coffe/admin/login.php`
 
-* **PHP** (v7.4 or higher recommended)
-* **MySQL**
-* A local server environment like **XAMPP** or **Laragon**.
-
----
-
-## ⚙️ Installation & Setup
-
-1. **Clone the Repository**
-```bash
-git clone https://github.com/joyMajumder123/cafe-coffe.git
-
-```
-
-
-2. **Database Configuration**
-* Open **phpMyAdmin**.
-* Create a new database named `cafe_db`.
-
-
-
-3. **Connect the App**
-* Open `config/db_connect.php` (or your equivalent connection file).
-* Update your credentials:
-
-
-```php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "cafe_db";
+## Project Structure
 
 ```
+cafe-coffe/
+├── admin/              # Admin panel
+│   ├── includes/       # Admin configuration and includes
+│   ├── dashboard.php   # Admin dashboard
+│   ├── menu.php        # Menu management
+│   ├── orders.php      # Order management
+│   └── ...
+├── includes/           # Shared includes
+├── assets/             # CSS, JS, images
+├── index.php           # Homepage
+├── menulist.php        # Menu listing
+├── checkout.php        # Checkout page
+└── ...
+```
 
+## Configuration Files
 
-4. **Run the Application**
-* Move the project folder to your server's root directory (e.g., `htdocs`).
-* Open your browser and navigate to `http://localhost/cafe-coffe`.
+⚠️ **Important:** Never commit sensitive configuration files to version control!
 
+The following files contain sensitive information and must be created locally:
+- `admin/includes/db_config.php` - Database credentials
+- `admin/includes/auth_config.php` - Admin authentication
 
+Template files are provided:
+- `admin/includes/db_config.example.php`
+- `admin/includes/auth_config.example.php`
 
----
+## Security
 
-## 📸 Screenshots
-*Home Page*
-<img width="1850" height="889" alt="Home Page" src="https://github.com/user-attachments/assets/5661c7d1-cbde-481d-a10c-011a2dbbb46c" />
+- All sensitive configuration files are excluded via `.gitignore`
+- Database credentials are stored separately from code
+- Admin credentials use secure password hashing (bcrypt)
+- Use strong passwords in production environments
 
-## 🤝 Contributing
+### Important Security Note
 
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. 
+**Git History:** If you've forked this repository, please note that previous commits may contain example credentials. These have been removed from the current codebase but may still exist in git history. For production use:
 
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+1. Create a fresh repository without the history, or
+2. Use git-filter-repo or BFG Repo-Cleaner to remove sensitive data from history
+3. Always use strong, unique credentials for your deployment
 
----
+## Contributing
 
-## 📄 License
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Distributed under the MIT License. See `LICENSE` for more information.
+## License
 
----
+This project is open source and available under the [MIT License](LICENSE).
 
+## Support
+
+For setup instructions, see [SETUP.md](SETUP.md)
+
+For issues or questions, please create an issue in the GitHub repository.
