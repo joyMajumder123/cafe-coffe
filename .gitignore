@@ -1,7 +1,25 @@
-assets/
-auth.php
-db.php
+# Sensitive Configuration Files
 db_config.php
+auth_config.php
+*_config.php
+!*.example.php
+
+# Development Files
 .vscode/
+.idea/
+
+# Documentation (if not needed in repo)
 TODO.md
 USER_DESiGN_GUIDE.md
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Temporary Files
+*.tmp
+*.temp
+*.log
+
+# Assets (if needed, uncomment)
+# assets/

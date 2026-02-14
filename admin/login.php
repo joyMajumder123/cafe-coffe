@@ -1,10 +1,12 @@
 <?php
 session_start();
+require_once __DIR__ . '/includes/auth_config.php';
+
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
-    // Hardcoded credentials for MVP
-    if ($username == 'admin' && $password == '123') {
+    
+    if ($username == ADMIN_USERNAME && password_verify($password, ADMIN_PASSWORD_HASH)) {
         $_SESSION['admin'] = true;
         header("Location: dashboard.php");
         exit();
