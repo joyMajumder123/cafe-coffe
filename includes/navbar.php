@@ -7,16 +7,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
 $is_admin = !empty($_SESSION['admin']);
 $is_customer = !empty($_SESSION['customer_id']);
 $customer_name = $_SESSION['customer_name'] ?? 'Profile';
-$navbar_classes = 'navbar navbar-expand-lg fixed-top';
-$nav_attributes = '';
-
-if ($current_page !== 'index.php') {
-    $navbar_classes .= ' solid-bg';
-} else {
-    $nav_attributes = ' data-nav-dynamic="true"';
-}
+$navbar_classes = 'navbar navbar-expand-lg fixed-top solid-bg';
 ?>
-<nav class="<?php echo $navbar_classes; ?>"<?php echo $nav_attributes; ?>>
+<nav class="<?php echo $navbar_classes; ?>"
     <div class="container">
         <a class="navbar-brand text-white d-flex align-items-center gap-2" href="index.php">
             <img src="https://html.pixelfit.agency/bistly/assets/images/innerpage/logo/logo-white.png" alt="Brand Logo">
@@ -61,7 +54,7 @@ if ($current_page !== 'index.php') {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="customerDropdown">
                         <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-circle me-2"></i> My Profile</a></li>
-                        <li><a class="dropdown-item" href="order_history.php"><i class="fas fa-receipt me-2"></i> Order History</a></li>
+                        <li><a class="dropdown-item" href="order_history.php"><i class="fas fa-receipt me-2"></i> Orders</a></li>
                         <li><a class="dropdown-item" href="checkout.php"><i class="fas fa-shopping-cart me-2"></i> My Cart</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="customer_logout.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>

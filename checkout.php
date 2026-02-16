@@ -525,11 +525,11 @@ $preferred_payment_method = $preferred_payment ?: 'cash';
                         successModal.show();
                         setTimeout(function () { successModal.hide(); }, 1800);
                     } else {
-                        showAlert(data.message || 'Order submitted successfully. Please check your profile for status.', 'success');
+                        showAlert(data.message || 'Order submitted successfully. Please check your Order section for status.', 'success');
                     }
                 })
                 .catch(function () {
-                    showAlert('Order submitted successfully. Please check your profile for status.', 'success');
+                    showAlert('Order submitted successfully. Please check your Order section for status.', 'success');
                 })
                 .finally(function () {
                     placeOrderBtn.disabled = false;

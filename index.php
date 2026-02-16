@@ -95,7 +95,7 @@ include 'includes/navbar.php';
         <p class="hero-subtitle">Experience the authentic flavors of India in every bite.</p>
 
         <div class="hero-offer-carousel-wrapper" style="margin-top: 80px;">
-            <div id="heroOfferCarousel" class="carousel slide hero-offer-carousel" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover" data-bs-touch="true">
+            <div id="heroOfferCarousel" class="carousel slide hero-offer-carousel" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover" data-bs-touch="true">
                 <div class="carousel-indicators hero-offer-indicators">
                     <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
