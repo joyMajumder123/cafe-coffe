@@ -70,24 +70,28 @@ $stmt->execute();
 $customer = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
+ensure_customer_meta_tables($conn);
+ensure_address_has_default($conn, $customer_id);
+$addresses = fetch_customer_addresses($conn, $customer_id);
+$preferred_payment = fetch_customer_payment_preference($conn, $customer_id);
+$category_preferences = fetch_customer_category_preferences($conn, $customer_id);
+
 $order_stmt = $conn->prepare('SELECT * FROM orders WHERE customer_id = ? ORDER BY created_at DESC');
 $order_stmt->bind_param('i', $customer_id);
 $order_stmt->execute();
 $orders_result = $order_stmt->get_result();
 $orders = $orders_result ? $orders_result->fetch_all(MYSQLI_ASSOC) : [];
 $order_stmt->close();
-$recommendations = fetch_customer_recommendations($conn, $orders, 4);
-
-ensure_customer_meta_tables($conn);
-ensure_address_has_default($conn, $customer_id);
-$addresses = fetch_customer_addresses($conn, $customer_id);
-$preferred_payment = fetch_customer_payment_preference($conn, $customer_id);
+$recommendations = fetch_customer_recommendations($conn, $orders, 4, [
+    'category_preferences' => $category_preferences,
+]);
 
 $show_edit_form = ($profile_notice !== '' || $profile_error !== '');
 
 $recommendation_reason_meta = [
     'favorite' => ['label' => 'You order this often', 'class' => 'bg-warning text-dark'],
     'category' => ['label' => 'Similar to your picks', 'class' => 'bg-info text-dark'],
+    'taste' => ['label' => 'Based on your browsing', 'class' => 'bg-primary text-white'],
     'trending' => ['label' => 'Popular this week', 'class' => 'bg-secondary text-white'],
 ];
 ?>
@@ -183,7 +187,15 @@ $recommendation_reason_meta = [
                                             </p>
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
                                                 <strong class="text-gold">₹<?php echo number_format((float) $recommendation['price'], 2); ?></strong>
-                                                <button type="button" class="btn btn-sm btn-outline-gold add-rec-to-cart" data-menu-id="<?php echo (int) $recommendation['id']; ?>" data-menu-name="<?php echo htmlspecialchars($recommendation['name']); ?>" data-menu-price="<?php echo $data_price; ?>">Add to cart</button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-gold add-rec-to-cart"
+                                                    data-menu-id="<?php echo (int) $recommendation['id']; ?>"
+                                                    data-menu-name="<?php echo htmlspecialchars($recommendation['name']); ?>"
+                                                    data-menu-price="<?php echo $data_price; ?>"
+                                                    data-category-slug="<?php echo htmlspecialchars($recommendation['category_slug'] ?? cafe_normalize_category_slug($recommendation['category'] ?? '')); ?>"
+                                                    data-category-label="<?php echo htmlspecialchars($recommendation['category_label'] ?? $recommendation['category'] ?? ''); ?>"
+                                                >Add to cart</button>
                                             </div>
                                         </div>
                                     </div>
@@ -627,6 +639,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         var name = button.getAttribute('data-menu-name') || 'Menu Item';
         var price = parseFloat(button.getAttribute('data-menu-price')) || 0;
+        var categorySlug = button.getAttribute('data-category-slug') || '';
+        var categoryLabel = button.getAttribute('data-category-label') || '';
         var cartItems = loadCartFromStorage();
         var existing = null;
         for (var i = 0; i < cartItems.length; i++) {
@@ -637,10 +651,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
+            if (!existing.category_slug && categorySlug) {
+                existing.category_slug = categorySlug;
+            }
+            if (!existing.category_label && categoryLabel) {
+                existing.category_label = categoryLabel;
+            }
         } else {
-            cartItems.push({ id: id, name: name, price: price, quantity: 1 });
+            cartItems.push({
+                id: id,
+                name: name,
+                price: price,
+                quantity: 1,
+                category_slug: categorySlug,
+                category_label: categoryLabel
+            });
         }
         saveCartToStorage(cartItems);
+        if (window.CafeTasteTracker && (categorySlug || categoryLabel)) {
+            window.CafeTasteTracker.trackCategory(categorySlug, categoryLabel, 'profile');
+        }
         if (recommendationsFeedback) {
             recommendationsFeedback.textContent = name + ' added to your cart.';
             recommendationsFeedback.classList.remove('d-none', 'text-danger');

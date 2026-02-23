@@ -95,7 +95,7 @@ include 'includes/navbar.php';
         <p class="hero-subtitle">Experience the authentic flavors of India in every bite.</p>
 
         <div class="hero-offer-carousel-wrapper" style="margin-top: 80px;">
-            <div id="heroOfferCarousel" class="carousel slide hero-offer-carousel" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="hover" data-bs-touch="true">
+            <div id="heroOfferCarousel" class="carousel slide hero-offer-carousel" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover" data-bs-touch="true">
                 <div class="carousel-indicators hero-offer-indicators">
                     <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                     <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -163,102 +163,6 @@ include 'includes/navbar.php';
         </div>
     </div>
 </header>
-<!-- Hero Slider Section 
-<section class="hero-slider-area">
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
-        <!-- Indicators (Optional) 
-        <div class="carousel-indicators">
-            <button type="button" data-target="#heroCarousel" data-slide-to="0" class="active"></button>
-            <button type="button" data-target="#heroCarousel" data-slide-to="1"></button>
-            <button type="button" data-target="#heroCarousel" data-slide-to="2"></button>
-        </div>
-
-        <div class="carousel-inner">
-            <!-- Slide 1 
-            <div class="carousel-item active">
-                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1920&q=80');"></div>
-                <div class="carousel-caption d-flex align-items-center">
-                    <div class="container text-start">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <h6 class="text-primary text-uppercase fw-bold mb-3 animate-up">Welcome to Bistly</h6>
-                                <h1 class="display-2 mb-4 animate-up delay-1">Experience Pure Pleasure on <span class="italic">Every Plate</span></h1>
-                                <p class="lead mb-5 animate-up delay-2">Artfully prepared dishes, fresh ingredients, and bold flavors that awaken your senses.</p>
-                                <div class="animate-up delay-3">
-                                    <a href="menulist.php" class="btn btn-gold btn-lg me-3">Explore Menu</a>
-                                    <a href="contact.php" class="btn btn-outline-light btn-lg">Book A Table</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 2 
-            <div class="carousel-item">
-                <div class="hero-slide-bg" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1920&q=80');"></div>
-                <div class="carousel-caption d-flex align-items-center">
-                    <div class="container text-start">
-                        <div class="row">
-                            <div class="col-lg-7">
-                                <h6 class="text-primary text-uppercase fw-bold mb-3 animate-up">Fine Dining Experience</h6>
-                                <h1 class="display-2 mb-4 animate-up delay-1">Traditional Taste <br><span class="italic">Modern Twist</span></h1>
-                                <p class="lead mb-5 animate-up delay-2">We bring you the authentic flavors of Italy served with a contemporary touch.</p>
-                                <div class="animate-up delay-3">
-                                    <a href="menulist.php" class="btn btn-gold btn-lg me-3">View Menu</a>
-                                    <a href="contact.php" class="btn btn-outline-light btn-lg">Reservation</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation Arrows 
-        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
-</section>
-
-
-<!-- Slidable Banner Section 
-<section class="slidable-banner py-5">
-    <div class="container">
-        <div id="bannerCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
-            <div class="carousel-indicators">
-                <button type="button" data-target="#bannerCarousel" data-slide-to="0" class="active"></button>
-                <button type="button" data-target="#bannerCarousel" data-slide-to="1"></button>
-                <button type="button" data-target="#bannerCarousel" data-slide-to="2"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=80" class="d-block w-100" alt="Delicious Food Banner">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=1200&q=80" class="d-block w-100" alt="Fresh Ingredients Banner">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80" class="d-block w-100" alt="Restaurant Interior Banner">
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#bannerCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#bannerCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-    </div>
-</section>
 
 <!-- Menu Section -->
 <section class="menu-section py-5" id="menu-grid">
