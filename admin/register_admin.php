@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate inputs
     if ($code === '' || $username === '' || $email === '' || $password === '') {
         $error = 'All fields are required.';
-    } elseif (strlen($password) < 6) {
-        $error = 'Password must be at least 6 characters.';
+    } elseif (strlen($password) < 3) {
+        $error = 'Password must be at least 3 characters.';
     } elseif ($password !== $confirm) {
         $error = 'Passwords do not match.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="col-md-5">
 <div class="card shadow">
 <div class="card-body">
-<h3 class="card-title text-center mb-1">☕ Cafe Admin</h3>
+<h3 class="card-title text-center mb-1"> Cafe Admin</h3>
 <p class="text-center text-muted mb-4">Register with Invite Code</p>
 
 <?php if ($error): ?>
