@@ -1,5 +1,6 @@
 <?php
 session_start();
+<<<<<<< HEAD
 
 // Already logged in?
 if (!empty($_SESSION['admin_user_id'])) {
@@ -32,6 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $error = "Too many failed attempts. Please try again in {$LOCKOUT_MINUTES} minutes.";
     } elseif ($username === '' || $password === '') {
         $error = "Please enter both username and password.";
+=======
+require_once __DIR__ . '/includes/auth_config.php';
+
+if (isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+    if ($username == ADMIN_USERNAME && password_verify($password, ADMIN_PASSWORD_HASH)) {
+        $_SESSION['admin'] = true;
+        header("Location: dashboard.php");
+        exit();
+>>>>>>> 0a326b648898bf45f29b4008031d761173890da3
     } else {
         // Look up the user
         $stmt = $conn->prepare("
