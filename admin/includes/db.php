@@ -222,4 +222,8 @@ foreach ($order_columns as $column => $alter_sql) {
     }
 }
 
+// ── RBAC Tables Migration ────────────────────────────────────────
+require_once __DIR__ . '/rbac/rbac_tables.php';
+rbac_run_migrations($conn);
+
 ?>

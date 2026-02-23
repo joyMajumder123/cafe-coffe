@@ -1,10 +1,7 @@
 <?php 
-session_start();
-if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
-    exit();
-}
-include 'includes/db.php'; 
+include 'includes/auth.php';
+include 'includes/db.php';
+require_permission('reports.view');
 
 // --- Filter parameters ---
 $date_from  = $_GET['date_from']  ?? '';
@@ -472,5 +469,6 @@ $exportParams = http_build_query(array_filter([
         }
     });
     </script>
+    <script src="js/order-notifications.js"></script>
 </body>
 </html>

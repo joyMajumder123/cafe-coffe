@@ -3,12 +3,9 @@
  * Export Sales Report to Excel (XLS format)
  * Supports same filters as reports.php: date_from, date_to, status
  */
-session_start();
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit();
-}
+include 'includes/auth.php';
 include 'includes/db.php';
+require_permission('reports.view');
 
 // --- Filter parameters ---
 $date_from = $_GET['date_from'] ?? '';

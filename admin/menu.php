@@ -1,10 +1,7 @@
 <?php 
-session_start();
-if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
-    exit();
-}
+include 'includes/auth.php';
 include 'includes/db.php';
+require_permission('menu.view');
 
 $errors = [];
 $success = '';
@@ -298,5 +295,6 @@ $activeItems = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total 
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/order-notifications.js"></script>
 </body>
 </html>

@@ -1,10 +1,7 @@
 <?php 
-session_start();
-if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
-    exit();
-}
-include 'includes/db.php'; 
+include 'includes/auth.php';
+include 'includes/db.php';
+require_permission('orders.view');
 
 // Order filter parameters
 $filter_date_from = $_GET['date_from'] ?? '';
@@ -244,6 +241,14 @@ $filter_status    = $_GET['status']     ?? '';
                                                                ($order['status'] === 'pending' ? 'warning' : 
                                                                ($order['status'] === 'cancelled' ? 'danger' : 'secondary')));
                                                 $can_cancel = in_array($order['status'], ['pending', 'confirmed']);
+
+                                                // Decode items JSON for the detail row
+                                                $items_json = $order['items'] ?? '[]';
+                                                $items_arr = json_decode($items_json, true);
+                                                if (!is_array($items_arr)) $items_arr = [];
+
+                                                $detail_row_id = 'detail-order-' . $order['id'];
+
                                                 echo "<tr>
                                                     <td><strong>#{$order['id']}</strong></td>
                                                     <td>{$order['customer_name']}</td>
@@ -251,9 +256,12 @@ $filter_status    = $_GET['status']     ?? '';
                                                     <td>{$order['phone']}</td>
                                                     <td>₹{$order['total_amount']}</td>
                                                     <td><span class='badge bg-$status_color'>" . ucfirst($order['status']) . "</span></td>
-                                                    <td>" . date('d M Y', strtotime($order['created_at'])) . "</td>
+                                                    <td>" . date('d M Y H:i', strtotime($order['created_at'])) . "</td>
                                                     <td>
-                                                        <div class='d-flex gap-2'>
+                                                        <div class='d-flex gap-2 align-items-center'>
+                                                            <button type='button' class='btn btn-sm btn-outline-primary order-view-btn' data-target='$detail_row_id' title='View details'>
+                                                                <i class='fas fa-eye me-1'></i>View
+                                                            </button>
                                                             <form method='POST' style='flex: 1;'>
                                                                 <input type='hidden' name='order_id' value='{$order['id']}'>
                                                                 <select name='status' class='form-select form-select-sm' onchange='this.form.submit()'>
@@ -278,6 +286,81 @@ $filter_status    = $_GET['status']     ?? '';
                                                         </div>
                                                     </td>
                                                 </tr>";
+
+                                                // ── Inline Detail Row (hidden by default) ──
+                                                $address_display = htmlspecialchars(($order['address'] ?? '') . ($order['city'] ? ', ' . $order['city'] : ''));
+                                                $payment_display = htmlspecialchars(ucwords(str_replace('_', ' ', $order['payment_method'] ?? 'N/A')));
+                                                $subtotal_display = number_format((float)($order['subtotal'] ?? 0), 2);
+                                                $delivery_display = number_format((float)($order['delivery_charge'] ?? 0), 2);
+                                                $tax_display = number_format((float)($order['tax'] ?? 0), 2);
+                                                $total_display = number_format((float)($order['total_amount'] ?? 0), 2);
+
+                                                echo "<tr id='$detail_row_id' style='display:none;'>
+                                                    <td colspan='8'>
+                                                        <div class='p-3 bg-light rounded border'>
+                                                            <div class='d-flex justify-content-between align-items-center mb-3'>
+                                                                <h6 class='mb-0 fw-bold'><i class='fas fa-receipt me-2'></i>Order #{$order['id']} — Details</h6>
+                                                                <button type='button' class='btn btn-sm btn-outline-secondary order-close-btn' data-target='$detail_row_id'><i class='fas fa-times me-1'></i>Close</button>
+                                                            </div>
+                                                            <div class='row mb-3'>
+                                                                <div class='col-md-4'>
+                                                                    <strong><i class='fas fa-user me-1'></i> Customer</strong><br>
+                                                                    {$order['customer_name']}<br>
+                                                                    <small class='text-muted'>{$order['email']} &bull; {$order['phone']}</small>
+                                                                </div>
+                                                                <div class='col-md-4'>
+                                                                    <strong><i class='fas fa-info-circle me-1'></i> Status & Payment</strong><br>
+                                                                    <span class='badge bg-$status_color'>" . ucfirst($order['status']) . "</span>
+                                                                    &bull; $payment_display<br>
+                                                                    <small class='text-muted'>" . date('d M Y, h:i A', strtotime($order['created_at'])) . "</small>
+                                                                </div>";
+                                                                if (!empty($address_display)) {
+                                                                    echo "<div class='col-md-4'>
+                                                                        <strong><i class='fas fa-map-marker-alt me-1'></i> Delivery Address</strong><br>
+                                                                        $address_display
+                                                                    </div>";
+                                                                }
+                                                echo "      </div>
+
+                                                            <strong class='d-block mb-2'><i class='fas fa-utensils me-1'></i> Ordered Items</strong>";
+                                                            if (count($items_arr) > 0) {
+                                                                echo "<table class='table table-sm table-bordered mb-3 bg-white'>
+                                                                    <thead class='table-light'>
+                                                                        <tr><th>#</th><th>Item</th><th class='text-center'>Qty</th><th class='text-end'>Price</th><th class='text-end'>Total</th></tr>
+                                                                    </thead><tbody>";
+                                                                $item_num = 0;
+                                                                foreach ($items_arr as $item) {
+                                                                    $item_num++;
+                                                                    $item_name = htmlspecialchars($item['name'] ?? 'Unknown Item');
+                                                                    $item_qty = intval($item['quantity'] ?? 1);
+                                                                    $item_price = floatval($item['price'] ?? 0);
+                                                                    $item_total = $item_price * $item_qty;
+                                                                    echo "<tr>
+                                                                        <td>$item_num</td>
+                                                                        <td>$item_name</td>
+                                                                        <td class='text-center'>$item_qty</td>
+                                                                        <td class='text-end'>₹" . number_format($item_price, 2) . "</td>
+                                                                        <td class='text-end'>₹" . number_format($item_total, 2) . "</td>
+                                                                    </tr>";
+                                                                }
+                                                                echo "</tbody></table>";
+                                                            } else {
+                                                                echo "<p class='text-muted'>No item details available.</p>";
+                                                            }
+
+                                                            echo "<div class='row'>
+                                                                <div class='col-md-4 ms-auto'>
+                                                                    <table class='table table-sm mb-0'>
+                                                                        <tr><td>Subtotal</td><td class='text-end'>₹$subtotal_display</td></tr>
+                                                                        <tr><td>Delivery</td><td class='text-end'>₹$delivery_display</td></tr>
+                                                                        <tr><td>Tax</td><td class='text-end'>₹$tax_display</td></tr>
+                                                                        <tr class='fw-bold'><td>Total</td><td class='text-end text-success'>₹$total_display</td></tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>";
                                             }
                                         } else {
                                             echo "<tr><td colspan='8' class='text-center text-muted'>No orders found</td></tr>";
@@ -295,5 +378,54 @@ $filter_status    = $_GET['status']     ?? '';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/order-notifications.js"></script>
+    <script>
+    document.addEventListener('click', function(e) {
+        var viewBtn = e.target.closest('.order-view-btn');
+        if (viewBtn) {
+            var targetId = viewBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = '';
+                viewBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Hide';
+                viewBtn.classList.remove('btn-outline-primary');
+                viewBtn.classList.add('btn-outline-secondary');
+                viewBtn.classList.remove('order-view-btn');
+                viewBtn.classList.add('order-hide-btn');
+            }
+            return;
+        }
+        var hideBtn = e.target.closest('.order-hide-btn');
+        if (hideBtn) {
+            var targetId = hideBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = 'none';
+                hideBtn.innerHTML = '<i class="fas fa-eye me-1"></i>View';
+                hideBtn.classList.remove('btn-outline-secondary');
+                hideBtn.classList.add('btn-outline-primary');
+                hideBtn.classList.remove('order-hide-btn');
+                hideBtn.classList.add('order-view-btn');
+            }
+            return;
+        }
+        var closeBtn = e.target.closest('.order-close-btn');
+        if (closeBtn) {
+            var targetId = closeBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = 'none';
+                var viewBtn = document.querySelector('[data-target="' + targetId + '"].order-hide-btn');
+                if (viewBtn) {
+                    viewBtn.innerHTML = '<i class="fas fa-eye me-1"></i>View';
+                    viewBtn.classList.remove('btn-outline-secondary');
+                    viewBtn.classList.add('btn-outline-primary');
+                    viewBtn.classList.remove('order-hide-btn');
+                    viewBtn.classList.add('order-view-btn');
+                }
+            }
+        }
+    });
+    </script>
 </body>
 </html>

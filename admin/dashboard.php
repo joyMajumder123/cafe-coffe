@@ -1,10 +1,7 @@
 <?php 
-session_start();
-if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
-    exit();
-}
-include 'includes/db.php'; 
+include 'includes/auth.php';
+include 'includes/db.php';
+require_permission('dashboard.view');
 
 
 
@@ -187,6 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
                                             <th>Amount</th>
                                             <th>Status</th>
                                             <th>Date</th>
+                                            <th>Details</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -195,16 +193,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
                                         if ($orders && mysqli_num_rows($orders) > 0) {
                                             while ($order = mysqli_fetch_assoc($orders)) {
                                                 $status_class = $order['status'] === 'completed' ? 'success' : ($order['status'] === 'pending' ? 'warning' : 'info');
+                                                $dash_detail_id = 'dash-detail-' . $order['id'];
+
+                                                // Decode items
+                                                $items_json = $order['items'] ?? '[]';
+                                                $items_arr = json_decode($items_json, true);
+                                                if (!is_array($items_arr)) $items_arr = [];
+                                                $payment_display = htmlspecialchars(ucwords(str_replace('_', ' ', $order['payment_method'] ?? 'N/A')));
+
                                                 echo "<tr>
                                                     <td><strong>#{$order['id']}</strong></td>
                                                     <td>{$order['customer_name']}</td>
                                                     <td>₹{$order['total_amount']}</td>
                                                     <td><span class='badge bg-{$status_class}'>" . ucfirst($order['status']) . "</span></td>
                                                     <td>" . date('d M Y', strtotime($order['created_at'])) . "</td>
+                                                    <td>
+                                                        <button type='button' class='btn btn-sm btn-outline-primary order-view-btn' data-target='$dash_detail_id'>
+                                                            <i class='fas fa-eye me-1'></i>View
+                                                        </button>
+                                                    </td>
+                                                </tr>";
+
+                                                // Inline detail row
+                                                echo "<tr id='$dash_detail_id' style='display:none;'>
+                                                    <td colspan='6'>
+                                                        <div class='p-3 bg-light rounded border'>
+                                                            <div class='d-flex justify-content-between align-items-center mb-2'>
+                                                                <h6 class='mb-0 fw-bold'><i class='fas fa-receipt me-2'></i>Order #{$order['id']} — Details</h6>
+                                                                <button type='button' class='btn btn-sm btn-outline-secondary order-close-btn' data-target='$dash_detail_id'><i class='fas fa-times me-1'></i>Close</button>
+                                                            </div>
+                                                            <div class='row mb-2'>
+                                                                <div class='col-md-6'>
+                                                                    <strong>Customer:</strong> {$order['customer_name']}<br>
+                                                                    <small class='text-muted'>{$order['email']} &bull; {$order['phone']}</small>
+                                                                </div>
+                                                                <div class='col-md-6'>
+                                                                    <strong>Payment:</strong> $payment_display &bull;
+                                                                    <span class='badge bg-{$status_class}'>" . ucfirst($order['status']) . "</span>
+                                                                </div>
+                                                            </div>";
+                                                            if (count($items_arr) > 0) {
+                                                                echo "<table class='table table-sm table-bordered mb-2 bg-white'>
+                                                                    <thead class='table-light'>
+                                                                        <tr><th>#</th><th>Item</th><th class='text-center'>Qty</th><th class='text-end'>Price</th><th class='text-end'>Total</th></tr>
+                                                                    </thead><tbody>";
+                                                                $n = 0;
+                                                                foreach ($items_arr as $item) {
+                                                                    $n++;
+                                                                    $iname = htmlspecialchars($item['name'] ?? 'Unknown');
+                                                                    $iqty = intval($item['quantity'] ?? 1);
+                                                                    $iprice = floatval($item['price'] ?? 0);
+                                                                    $itotal = $iprice * $iqty;
+                                                                    echo "<tr><td>$n</td><td>$iname</td><td class='text-center'>$iqty</td><td class='text-end'>₹" . number_format($iprice,2) . "</td><td class='text-end'>₹" . number_format($itotal,2) . "</td></tr>";
+                                                                }
+                                                                echo "</tbody></table>";
+                                                            } else {
+                                                                echo "<p class='text-muted mb-1'>No item details available.</p>";
+                                                            }
+                                                            echo "<div class='text-end fw-bold'>Total: <span class='text-success'>₹" . number_format((float)$order['total_amount'], 2) . "</span></div>";
+                                                echo "      </div>
+                                                    </td>
                                                 </tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='5' class='text-center text-muted'>No orders yet</td></tr>";
+                                            echo "<tr><td colspan='6' class='text-center text-muted'>No orders yet</td></tr>";
                                         }
                                         ?>
                                     </tbody>
@@ -346,5 +398,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/order-notifications.js"></script>
+    <script>
+    document.addEventListener('click', function(e) {
+        var viewBtn = e.target.closest('.order-view-btn');
+        if (viewBtn) {
+            var targetId = viewBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = '';
+                viewBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Hide';
+                viewBtn.classList.remove('btn-outline-primary');
+                viewBtn.classList.add('btn-outline-secondary');
+                viewBtn.classList.remove('order-view-btn');
+                viewBtn.classList.add('order-hide-btn');
+            }
+            return;
+        }
+        var hideBtn = e.target.closest('.order-hide-btn');
+        if (hideBtn) {
+            var targetId = hideBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = 'none';
+                hideBtn.innerHTML = '<i class="fas fa-eye me-1"></i>View';
+                hideBtn.classList.remove('btn-outline-secondary');
+                hideBtn.classList.add('btn-outline-primary');
+                hideBtn.classList.remove('order-hide-btn');
+                hideBtn.classList.add('order-view-btn');
+            }
+            return;
+        }
+        var closeBtn = e.target.closest('.order-close-btn');
+        if (closeBtn) {
+            var targetId = closeBtn.getAttribute('data-target');
+            var row = document.getElementById(targetId);
+            if (row) {
+                row.style.display = 'none';
+                var viewBtn = document.querySelector('[data-target="' + targetId + '"].order-hide-btn');
+                if (viewBtn) {
+                    viewBtn.innerHTML = '<i class="fas fa-eye me-1"></i>View';
+                    viewBtn.classList.remove('btn-outline-secondary');
+                    viewBtn.classList.add('btn-outline-primary');
+                    viewBtn.classList.remove('order-hide-btn');
+                    viewBtn.classList.add('order-view-btn');
+                }
+            }
+        }
+    });
+    </script>
 </body>
 </html>

@@ -1,10 +1,7 @@
 <?php 
-session_start();
-if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
-    exit();
-}
+include 'includes/auth.php';
 include 'includes/db.php';
+require_permission('staff.view');
 
 $notice = '';
 $notice_type = 'success';
@@ -108,19 +105,7 @@ $activeStaff = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total 
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a href="dashboard.php" class="nav-link">📊 Dashboard</a></li>
-                    <li class="nav-item"><a href="reports.php" class="nav-link">📈 Reports</a></li>
-                    <li class="nav-item"><a href="orders.php" class="nav-link">📦 Orders</a></li>
-                    <li class="nav-item"><a href="inquiries.php" class="nav-link">💬 Inquiries</a></li>
-                    <li class="nav-item"><a href="menu.php" class="nav-link">🍽️ Menu</a></li>
-                    <li class="nav-item"><a href="categories.php" class="nav-link">📂 Categories</a></li>
-                    <li class="nav-item"><a href="reservation.php" class="nav-link">📅 Reservations</a></li>
-                    <li class="nav-item"><a href="staff.php" class="nav-link active">👥 Staff</a></li>
-                
-                </ul>
-            </div>
+            <?php include 'includes/sidebar.php'; ?>
 
             <!-- Main Content -->
             <div class="col-md-10 p-4">
@@ -333,5 +318,6 @@ $activeStaff = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total 
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/order-notifications.js"></script>
 </body>
 </html>
