@@ -1,267 +1,268 @@
-/* Color Palette */
+/* ============================================================
+   BISTLY RESTAURANT — CONSOLIDATED STYLESHEET
+   ============================================================ */
+
+/* --- Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+/* --- Single Color Palette --- */
 :root {
-    --bg-dark-green: #233028; /* Deep green from Image 1 & 3 */
-    --accent-tan: #D29062;    /* Button/Tan color from Image 1 */
-    --text-muted: #a8b0ac;
-    --gold: #ffc107;
-    --price-red: #e23e3e;    /* Price color from Image 2 */
-}
-/* --- EXACT COLOR PALETTE FROM IMAGES --- */
-:root {
-    --cafe-bg: #2d3e38;      /* The exact deep forest green from image_1c957d.jpg */
-    --cafe-tan: #d29062;     /* The exact button color from image_1c957d.jpg */
-    --cafe-red: #e23e3e;     /* The price color from image_1c988c.jpg */
-    --cafe-gold: #f39c12;    /* Star rating color */
-}
-
-/* Hero Styling */
-.rs-hero {
-    background-color: var(--cafe-bg) !important;
-    padding: 120px 0;
-    position: relative;
-    overflow: hidden;
+    --gold-color: #c5a059;
+    --gold-hover: #a68545;
+    --dark-green: #1f3036;
+    --dark-slate: #263c42;
+    --footer-bg: #041614;
+    --text-dark: #292929;
+    --text-body: #666;
+    --text-muted-light: rgba(255, 255, 255, 0.7);
+    --border-light: rgba(255, 255, 255, 0.1);
+    --body-font: 'Poppins', 'Barlow', sans-serif;
+    --heading-font: 'Playfair Display', 'Gelasio', serif;
 }
 
-.hero-content h1 {
-    font-family: 'Marcellus', serif;
-    font-size: 4.5rem;
-    color: #ffffff;
-    line-height: 1.1;
+/* --- Base --- */
+body {
+    font-family: var(--body-font);
+    color: var(--text-body);
+    background-color: #fff;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-.hero-content p {
-    color: rgba(255,255,255,0.7);
-    margin: 20px auto;
-    max-width: 500px;
-}
-.hero-section {
-  width: 100%;
+h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
+
+/* --- Utility classes --- */
+.text-gold { color: var(--gold-color) !important; }
+.bg-dark-green { background-color: var(--dark-green); }
+
+/* ============================================================
+   1.  NAVBAR
+   ============================================================ */
+.navbar {
+    padding: 18px 0;
+    transition: all 0.35s ease;
+    background: transparent;
+    z-index: 1030;
 }
 
-.hero-img {
-  height: 90vh;
-  object-fit: cover;
+/* Dynamic (transparent → solid on scroll) variant */
+.navbar[data-nav-dynamic="true"] {
+    background: linear-gradient(155deg, rgba(7, 11, 14, 0.82), rgba(7, 11, 14, 0.45));
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-brand,
+.navbar[data-nav-dynamic="true"]:not(.solid-bg) .nav-link,
+.navbar[data-nav-dynamic="true"]:not(.solid-bg) .dropdown-toggle {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-toggler-icon {
+    filter: invert(1);
 }
 
-.carousel-caption {
-  background: rgba(0,0,0,0.5);
-  padding: 20px;
-  border-radius: 8px;
-}
-/* Hero Slider Styles */
-.hero-slider-area {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
+/* Solid dark background (default for all pages) */
+.navbar.solid-bg {
+    background-color: var(--dark-green);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+    backdrop-filter: none;
+    border-bottom: none;
 }
 
-.carousel-item {
-    height: 100vh;
-    min-height: 600px;
+/* Scrolled = white background */
+.navbar.scrolled {
+    background-color: #ffffff !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
 }
-
-.hero-slide-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: transform 10s ease; /* Slow zoom effect */
+.navbar.scrolled .nav-link       { color: #333 !important; }
+.navbar.scrolled .nav-link:hover,
+.navbar.scrolled .nav-link.active { color: var(--gold-color) !important; }
+.navbar.scrolled .navbar-brand   { color: #333 !important; }
+.navbar.scrolled .navbar-toggler { border-color: #333; }
+.navbar.scrolled .navbar-toggler-icon {
+    filter: invert(1) grayscale(100%) brightness(0%);
 }
-
-/* Dark overlay for text readability */
-.hero-slide-bg::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); 
+.navbar.scrolled .admin-btn {
+    color: #333 !important;
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #333;
 }
-
-/* Active slide zoom effect */
-.carousel-item.active .hero-slide-bg {
-    transform: scale(1.1);
+.navbar.scrolled .dropdown-menu {
+    background-color: #fff !important;
+    border: 1px solid #ddd;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
-.carousel-caption {
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    text-align: left;
-    z-index: 10;
+.navbar.scrolled .dropdown-item       { color: #333 !important; }
+.navbar.scrolled .dropdown-item:hover {
+    background-color: rgba(197, 160, 89, 0.1);
+    color: var(--gold-color) !important;
 }
+.navbar.scrolled .dropdown-toggle::after,
+.navbar.scrolled .fa-chevron-down { color: #333 !important; }
 
-/* Typography */
-.carousel-caption h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #fff;
-}
-
-.carousel-caption .italic {
-    font-style: italic;
-    font-weight: 400;
-}
-
-/* Animation Classes */
-.animate-up {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
-}
-
-.active .animate-up {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.delay-1 { transition-delay: 0.2s; }
-.delay-2 { transition-delay: 0.4s; }
-.delay-3 { transition-delay: 0.6s; }
-
-/* Gold Button Style */
-.btn-gold {
-    background-color: #c5a059;
-    border-color: #c5a059;
-    color: #fff;
-    border-radius: 0;
-    padding: 12px 30px;
+/* Brand & links */
+.navbar-brand {
+    font-family: var(--heading-font);
+    font-size: 1.8rem;
     font-weight: 600;
 }
-
-.btn-gold:hover {
-    background-color: #a68545;
-    color: #fff;
+.navbar-brand img {
+    max-height: 40px;
+}
+.navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: color 0.25s;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--gold-color) !important;
 }
 
-/* THE ARCHED IMAGE - "Same to Same" Look */
-.hero-image img {
-    border-radius: 50% 50% 0 0 / 35% 35% 0 0 !important;
-    object-fit: cover;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+/* Desktop hover-open dropdown */
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+        animation: fadeInUp 0.3s ease;
+    }
 }
 
-.image_one { position: absolute; left: -50px; bottom: -20px; width: 400px; }
-.image_two { position: absolute; right: -50px; bottom: -100px; width: 400px; }
-
-/* Buttons */
-.theme-btn.style-one {
-    background-color: var(--cafe-tan) !important;
-    color: white !important;
+/* Dropdown base */
+.dropdown-menu {
+    background-color: var(--dark-green);
     border: none;
     border-radius: 0;
-    padding: 15px 35px;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+.dropdown-item:hover {
+    background-color: transparent;
+    color: var(--gold-color);
+    padding-left: 25px;
+}
+
+/* Admin dropdown */
+.admin-menu-wrapper .admin-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 15px !important;
+    border-radius: 5px;
+    color: #fff !important;
+    transition: all 0.3s ease;
+}
+.admin-menu-wrapper .admin-btn:hover {
+    background: var(--gold-color);
+    border-color: var(--gold-color);
+}
+.admin-menu-wrapper .dropdown-menu {
+    background-color: var(--footer-bg);
+    border: 1px solid var(--gold-color);
+    margin-top: 15px;
+    border-radius: 0;
+    padding: 10px 0;
+}
+.admin-menu-wrapper .dropdown-header {
+    color: var(--gold-color);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
     font-weight: 700;
 }
-
-/* Menu Grid Styling - image_1c988c.jpg */
-.bistly-food-item {
-    background: #fff;
-    padding: 0;
-    border: none;
-    text-align: left;
+.admin-menu-wrapper .dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    font-size: 14px;
+}
+.admin-menu-wrapper .dropdown-item i {
+    width: 20px;
+    color: var(--gold-color);
+}
+.admin-menu-wrapper .dropdown-item:hover {
+    background-color: rgba(197, 160, 89, 0.1);
+    color: #fff;
+    padding-left: 25px;
+}
+.admin-menu-wrapper .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.admin-menu-wrapper .dropdown-toggle::after {
+    color: var(--gold-color);
 }
 
-.bistly-food-item .hover-image img {
-    width: 100%;
-    aspect-ratio: 1/1; /* Square images like your picture */
-    object-fit: cover;
-}
+/* ============================================================
+   2.  HERO SECTION
+   ============================================================ */
 
-.bistly-food-item .price {
-    color: var(--cafe-red);
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.bistly-food-item .ratings {
-    color: #d4af37;
-    font-size: 0.7rem;
-}
-
-.bistly-food-item h4 {
-    font-family: 'Marcellus', serif;
-    font-size: 1.4rem;
-    color: var(--cafe-bg);
-    margin: 10px 0;
-}
-
-/* Typography */
-body { font-family: 'Roboto', sans-serif; }
-.main-title, .menu-main-title, .stat-number { font-family: 'Marcellus', serif; }
-
-/* Navigation */
-.transparent-header { background: transparent; padding: 20px 0; }
-.theme-btn-sm { background-color: var(--accent-tan); color: white; border-radius: 0; font-weight: bold; font-size: 0.8rem; padding: 10px 20px; }
-
-/* Hero Section */
-.hero-section {
-    background-color: var(--bg-dark-green); /* */
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    padding-top: 100px;
-}
-
+/* Inner-page hero (about, contact, menu, gallery, chefs) */
 .hero-wrapper {
     position: relative;
-    min-height: calc(100vh - 30px);
-    display: flex;
-    align-items: center;
     background-size: cover;
     background-position: center;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
-    padding: 8rem 0 5rem;
-    border-bottom-left-radius: 60px;
-    border-bottom-right-radius: 60px;
+    padding: 8rem 0 4rem;
     overflow: hidden;
-    margin-bottom: 3rem;
+    margin-bottom: 0;
 }
 
+/* Home hero (taller) */
 .hero-wrapper.home-hero {
-    margin-top: 0;
-    padding-top: calc(8rem + 80px);
-        width: 28px;
-        height: 4px;
-        border-radius: 999px;
-        background-color: rgba(255, 255, 255, 0.35);
-        border: none;
-
-.hero-overlay {
-        background-color: #ffde8a;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(8, 8, 8, 0.9) 0%, rgba(20, 20, 20, 0.65) 45%, rgba(20, 20, 20, 0.4) 100%);
+    min-height: 100vh;
+    padding-top: calc(8rem + 60px);
 }
 
+/* Dark overlay */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(8, 8, 8, 0.85) 0%,
+        rgba(20, 20, 20, 0.6) 45%,
+        rgba(20, 20, 20, 0.45) 100%
+    );
+    z-index: 0;
+}
+
+/* Subtle gold gradient sheen */
 .hero-wrapper::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, rgba(197, 160, 89, 0.15), rgba(0, 0, 0, 0));
+    background: linear-gradient(120deg, rgba(197, 160, 89, 0.12), transparent);
     pointer-events: none;
+    z-index: 0;
 }
 
+/* Content container */
 .hero-content {
     position: relative;
     z-index: 1;
-    padding: 3rem;
-    max-width: 840px;
+    text-align: center;
+    padding: 2rem 1rem;
+    max-width: 740px;
     margin: 0 auto;
-    background: rgba(12, 16, 20, 0.68);
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 45px 80px rgba(0, 0, 0, 0.35);
 }
 
 .hero-title {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
-    font-family: 'Playfair Display', serif;
+    font-family: var(--heading-font);
     margin-bottom: 1rem;
     color: #fffaf1;
 }
@@ -279,400 +280,60 @@ body { font-family: 'Roboto', sans-serif; }
     color: #ffd48f;
 }
 
-.hero-offer-carousel-wrapper {
-    margin-top: 2rem;
-    width: 100%;
-}
-
-.hero-offer-carousel {
-    position: relative;
-    background: radial-gradient(circle at top left, rgba(193, 157, 96, 0.4), rgba(9, 12, 16, 0.75));
-    border-radius: 36px;
-    padding: 2.25rem 2.5rem;
-    backdrop-filter: blur(22px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 35px 65px rgba(0, 0, 0, 0.45);
-    overflow: hidden;
-}
-.hero-offer-carousel::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08), transparent 55%);
-    pointer-events: none;
-}
-
-.hero-offer-card {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(220px, 280px) 1fr;
-    gap: 2.25rem;
-    border-radius: 30px;
-    background: linear-gradient(135deg, rgba(12, 18, 23, 0.9), rgba(17, 24, 30, 0.65));
-    padding: 1.5rem;
-    min-height: 260px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-}
-.hero-offer-card::before {
-    content: '';
-    position: absolute;
-    inset: 14px;
-    border-radius: 22px;
-    border: 1px dashed rgba(255, 255, 255, 0.08);
-    pointer-events: none;
-}
-
-.hero-offer-media {
-    position: relative;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 30px 55px rgba(0, 0, 0, 0.45);
-    min-height: 100%;
-}
-.hero-offer-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-.hero-offer-media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,0.65));
-}
-
-.hero-offer-copy h5 {
-    color: #fff;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.hero-offer-copy p {
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 0.4rem;
-}
-
-.hero-offer-tag {
-    letter-spacing: 0.35rem;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 0.35rem;
-}
-
-.hero-offer-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.85rem;
-    font-weight: 600;
-    color: #ffde8a;
-    font-size: 0.95rem;
-}
-
-.hero-offer-code {
-    padding: 0.35rem 0.85rem;
-    border: 1px dashed rgba(255, 255, 255, 0.45);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
-    text-transform: uppercase;
-    font-size: 0.75rem;
-}
-
-.hero-offer-cta {
-    color: rgba(255, 255, 255, 0.85);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-.hero-offer-cta::after {
-    content: '\2192';
-    font-size: 0.9rem;
-}
-.hero-offer-control {
-    width: 44px;
-    height: 44px;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    background-color: rgba(7, 11, 14, 0.65);
-}
-.hero-offer-indicators {
-    margin-bottom: -0.5rem;
-    gap: 0.35rem;
-}
-.hero-offer-indicators button {
-    width: 28px;
-    height: 4px;
-    border-radius: 999px;
-    background-color: rgba(255, 255, 255, 0.35);
-    border: none;
-}
-
-.hero-offer-indicators .active {
-    background-color: #ffde8a;
-}
-
-@media (max-width: 991px) {
-    .hero-offer-card {
-        grid-template-columns: 1fr;
-        padding: 1.25rem;
-    }
-    .hero-offer-media {
-        min-height: 220px;
-    }
-    .hero-offer-carousel {
-        padding: 1.75rem;
-    }
-}
+/* Breadcrumb in inner heroes */
+.breadcrumb-item a { color: rgba(255, 255, 255, 0.7); text-decoration: none; }
+.breadcrumb-item.active { color: #fff; }
 
 @media (max-width: 767px) {
     .hero-wrapper {
-        padding-top: 5rem;
-        min-height: 80vh;
-        border-bottom-left-radius: 30px;
-        border-bottom-right-radius: 30px;
-        margin-bottom: 2rem;
+        padding: 6rem 0 3rem;
+        min-height: 45vh;
     }
     .hero-wrapper.home-hero {
-        margin-top: 70px;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
+        min-height: 85vh;
+        padding-top: calc(6rem + 60px);
     }
     .hero-content {
-        padding: 2.25rem 1.75rem;
-        border-radius: 26px;
-    }
-    .hero-offer-card {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-    }
-    .hero-offer-media img {
-        width: 100%;
-        height: 200px;
+        padding: 1.5rem 1rem;
     }
 }
 
-.main-title { color: white; margin-bottom: 20px; }
-.hero-text { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
-.theme-btn-lg { background-color: var(--accent-tan); color: white; border-radius: 0; padding: 15px 30px; font-weight: bold; }
-
-/* Arched Images */
-.hero-arch { position: absolute; bottom: 0; width: 300px; height: 450px; }
-.hero-arch img { width: 100%; height: 100%; object-fit: cover; border-radius: 200px 200px 0 0; }
-.arch-left { left: 5%; transform: translateY(50px); } /* */
-.arch-right { right: 5%; transform: translateY(150px); }
-
-/* Stats Area */
-.stat-number { color: white; font-size: 3rem; margin-bottom: 0; }
-.stat-label { color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-.gold-star { color: var(--accent-tan); font-size: 1.5rem; }
-
-/* Menu Section */
-.menu-section { background-color: white; }
-.menu-sub-title { color: var(--accent-tan); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
-.menu-main-title { color: var(--bg-dark-green); font-size: 3rem; }
-
-/* Menu Cards */
-.menu-card { border: none; background: #fff; transition: 0.3s; }
-.menu-card:hover { transform: translateY(-10px); }
-.ratings { color: var(--accent-tan); font-size: 0.8rem; }
-.price { color: var(--price-red); font-weight: bold; font-size: 1.2rem; }
-.item-name { color: var(--bg-dark-green); font-weight: bold; margin: 10px 0; }
-.item-desc { color: #666; font-size: 0.9rem; }
-
-
-:root {
-    --gold-color: #c19d60;
-    --dark-green: #1f3036;
-    --dark-slate: #263c42; /* For Contact Form */
-    --text-dark: #292929;
-    --body-font: 'Barlow', sans-serif;
-    --heading-font: 'Gelasio', serif;
+/* ============================================================
+   3.  BUTTONS
+   ============================================================ */
+.btn-gold {
+    background-color: var(--gold-color);
+    border-color: var(--gold-color);
+    color: #fff;
+    border-radius: 4px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-gold:hover,
+.btn-gold:focus {
+    background-color: var(--gold-hover);
+    border-color: var(--gold-hover);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
 }
 
-body {
-    font-family: var(--body-font);
-    color: #666;
-    background-color: #fff;
-    overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
-
-/* --- Helper Classes --- */
-.text-gold { color: var(--gold-color) !important; }
-.bg-dark-green { background-color: var(--dark-green); }
-
-/* --- 1. Navbar & Dropdowns --- */
-.navbar {
-    padding: 20px 0;
-    transition: all 0.3s;
-    background: transparent;
-}
-.navbar[data-nav-dynamic="true"] {
-    background: linear-gradient(155deg, rgba(7, 11, 14, 0.82), rgba(7, 11, 14, 0.45));
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-brand,
-.navbar[data-nav-dynamic="true"]:not(.solid-bg) .nav-link,
-.navbar[data-nav-dynamic="true"]:not(.solid-bg) .dropdown-toggle {
-    color: rgba(255, 255, 255, 0.95) !important;
-}
-.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.6);
-}
-.navbar[data-nav-dynamic="true"]:not(.solid-bg) .navbar-toggler-icon {
-    filter: invert(1);
-}
-.navbar.solid-bg {
-    background-color: var(--dark-green);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    padding: 10px 0;
-    backdrop-filter: none;
-    border-bottom: none;
-}
-
-/* Navbar Scroll Styles (White BG + Dark Text) */
-.navbar.scrolled {
-    background-color: #ffffff !important;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    padding: 10px 0;
-}
-
-/* 2. Change Menu Links to Dark Color */
-.navbar.scrolled .nav-link {
-    color: #333333 !important; /* Dark Grey */
-}
-
-/* 3. Keep Hover/Active color Gold */
-.navbar.scrolled .nav-link:hover,
-.navbar.scrolled .nav-link.active {
-    color: var(--gold-color) !important;
-}
-
-/* 4. Change "BISTLY" Logo Text to Dark */
-.navbar.scrolled .navbar-brand {
-    color: #333333 !important;
-}
-
-/* 5. Change Dropdown Chevron Icons to Dark */
-.navbar.scrolled .fa-chevron-down {
-    color: #333333 !important;
-}
-
-/* 6. Mobile Toggle Button (Make it visible on white bg) */
-.navbar.scrolled .navbar-toggler {
-    border-color: #333333;
-}
-.navbar.scrolled .navbar-toggler-icon {
-    /* This creates a dark hamburger icon filter */
-    filter: invert(1) grayscale(100%) brightness(0%);
-}
-
-/* 7. Admin Button (Make text dark on white bg) */
-.navbar.scrolled .admin-btn {
-    color: #333333 !important;
-    background: rgba(0, 0, 0, 0.05);
-    border-color: #333333;
-}
-
-/* 8. Dropdown Menu (Make background white and text dark on scrolled) */
-.navbar.scrolled .dropdown-menu {
-    background-color: #ffffff !important;
-    border: 1px solid #ddd;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.navbar.scrolled .dropdown-item {
-    color: #333333 !important;
-}
-.navbar.scrolled .dropdown-item:hover {
-    background-color: rgba(197, 160, 89, 0.1);
-    color: var(--gold-color) !important;
-}
-.navbar.scrolled .dropdown-toggle::after {
-    color: #333333 !important;
-}
-.navbar-brand { font-family: var(--heading-font); font-size: 1.8rem; font-weight: 600; }
-.navbar-nav .nav-link {
-    color: rgba(255,255,255,0.9) !important;
-    font-weight: 500;
-    margin: 0 10px;
-}
-.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: var(--gold-color) !important; }
-/* =========================================
-   HOVER DROPDOWN FEATURE (Desktop Only)
-   ========================================= */
-   /* =========================================
-   NAVBAR SCROLL STYLES (White BG + Dark Text)
-   ========================================= */
-
-/* 1. The Navbar Background becomes White */
-.navbar.scrolled {
-    background-color: #ffffff !important;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    padding: 10px 0;
-}
-
-/* 2. Change Menu Links to Dark Color */
-.navbar.scrolled .nav-link {
-    color: #333333 !important; /* Dark Grey */
-}
-
-/* 3. Keep Hover/Active color Gold */
-.navbar.scrolled .nav-link:hover, 
-.navbar.scrolled .nav-link.active {
-    color: var(--gold-color) !important;
-}
-
-/* 4. Change "BISTLY" Logo Text to Dark */
-.navbar.scrolled .navbar-brand {
-    color: #333333 !important;
-}
-
-/* 5. Change Dropdown Chevron Icons to Dark */
-.navbar.scrolled .fa-chevron-down {
-    color: #333333 !important;
-}
-
-/* 6. Mobile Toggle Button (Make it visible on white bg) */
-.navbar.scrolled .navbar-toggler {
-    border-color: #333333;
-}
-.navbar.scrolled .navbar-toggler-icon {
-    /* This creates a dark hamburger icon filter */
-    filter: invert(1) grayscale(100%) brightness(0%); 
-}
-
-@media (min-width: 992px) {
-    .dropdown:hover .dropdown-menu {
-        display: block;
-        margin-top: 0; /* Prevents the menu from disappearing when moving mouse down */
-        animation: fadeInUp 0.3s ease; /* Optional: Makes it fade in smoothly */
-    }
-}
-/* Dropdown Styles */
-.dropdown-menu {
-    background-color: var(--dark-green);
-    border: none;
-    border-radius: 0;
-    margin-top: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-.dropdown-item {
-    color: rgba(255,255,255,0.8);
-    padding: 10px 20px;
-    font-size: 0.95rem;
-}
-.dropdown-item:hover {
-    background-color: transparent;
+.btn-outline-gold {
+    border: 2px solid var(--gold-color);
     color: var(--gold-color);
-    padding-left: 25px; /* Slide effect */
-    transition: 0.3s;
+    background: transparent;
+    border-radius: 4px;
+    padding: 12px 30px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+.btn-outline-gold:hover,
+.btn-outline-gold:focus {
+    background-color: var(--gold-color);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
 }
 
 .btn-reservation {
@@ -687,92 +348,145 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
 }
 .btn-reservation:hover { background-color: #fff; color: var(--dark-green); }
 
-/* --- 2. Hero Section (General) --- */
-.hero-wrapper {
+/* Category filter pills */
+.btn-filter {
+    border: none;
+    background: transparent;
+    color: #777;
+    font-weight: 600;
+    padding: 5px 15px;
     position: relative;
-    background-size: cover;
-    background-position: center;
-    height: 60vh;
-    min-height: 450px;
+    transition: color 0.2s;
+}
+.btn-filter:hover,
+.btn-filter.active { color: var(--gold-color); }
+.btn-filter.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    height: 2px;
+    background-color: var(--gold-color);
+}
+
+/* ============================================================
+   4.  SECTION TITLES
+   ============================================================ */
+.subtitle-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 15px;
 }
-.hero-overlay {
+.subtitle {
+    color: var(--gold-color);
+    font-size: 1.1rem;
+    position: relative;
+    padding: 0 20px;
+}
+.subtitle::before,
+.subtitle::after {
+    content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(22, 43, 50, 0.85); 
-    z-index: 1;
-}
-.hero-content { position: relative; z-index: 2; text-align: center; }
-.hero-title { color: #fff; font-size: 4.5rem; margin-bottom: 10px; }
-.breadcrumb-item a { color: rgba(255,255,255,0.7); text-decoration: none; }
-.breadcrumb-item.active { color: #fff; }
-
-/* --- 3. Menu Grid & Section Titles --- */
-.subtitle-wrap { display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
-.subtitle { color: var(--gold-color); font-size: 1.1rem; position: relative; padding: 0 20px; }
-.subtitle::before, .subtitle::after {
-    content: ''; position: absolute; top: 50%; width: 40px; height: 1px; background-color: var(--gold-color);
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background-color: var(--gold-color);
 }
 .subtitle::before { left: -30px; }
-.subtitle::after { right: -30px; }
-.main-title { color: #233d4d; font-size: 3.5rem; }
+.subtitle::after  { right: -30px; }
 
-/* Filter & Cards */
-.btn-filter { border: none; background: transparent; color: #777; font-weight: 600; padding: 5px 15px; position: relative; }
-.btn-filter:hover, .btn-filter.active { color: var(--gold-color); }
-.btn-filter.active::after {
-    content: ''; position: absolute; bottom: 0; left: 15px; right: 15px; height: 2px; background-color: var(--gold-color);
+.main-title {
+    color: #233d4d;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
 }
-.menu-card { border: none; background: transparent; }
-.img-wrapper { height: 280px; overflow: hidden; margin-bottom: 15px; }
-.img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-.menu-card:hover img { transform: scale(1.1); }
-.card-title a { color: var(--text-dark); text-decoration: none; font-size: 1.4rem; transition: 0.3s; }
-.card-title a:hover { color: var(--gold-color); }
-.price { display: block; margin-top: 5px; color: var(--gold-color); font-size: 1.2rem; font-weight: 700; }
 
-/* --- 4. NEW: Booking CTA Section (Home) --- */
+/* ============================================================
+   5.  MENU SECTION
+   ============================================================ */
+.menu-section { background-color: #fff; }
+
+.menu-card {
+    border: none;
+    background: transparent;
+    transition: 0.3s;
+}
+.menu-card:hover { transform: translateY(-5px); }
+
+.img-wrapper {
+    height: 280px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.5s;
+}
+.menu-card:hover img { transform: scale(1.1); }
+
+.card-title a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 1.4rem;
+    transition: 0.3s;
+}
+.card-title a:hover { color: var(--gold-color); }
+
+.price {
+    display: block;
+    margin-top: 5px;
+    color: var(--gold-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* ============================================================
+   6.  BOOKING CTA SECTION (Home)
+   ============================================================ */
 .booking-section {
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600&q=80');
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=1600&q=80');
     background-size: cover;
-    background-attachment: fixed; /* Parallax effect */
+    background-attachment: fixed;
     padding: 100px 0;
     text-align: center;
 }
-.booking-title { color: #fff; font-size: 4rem; margin-bottom: 40px; }
-.btn-outline-gold {
-    border: 2px solid var(--gold-color);
+.booking-title {
     color: #fff;
-    padding: 15px 40px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-block;
-    transition: 0.3s;
+    font-size: 4rem;
+    margin-bottom: 40px;
 }
-.btn-outline-gold:hover { background-color: var(--gold-color); color: #fff; }
 
-/* --- 5. NEW: Contact Page Styles --- */
-/* Info Cards */
+/* ============================================================
+   7.  CONTACT PAGE
+   ============================================================ */
 .contact-info-card {
     background: #fff;
     padding: 40px 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: 0.3s;
     height: 100%;
 }
 .contact-info-card:hover { transform: translateY(-5px); }
+
 .icon-circle {
-    width: 60px; height: 60px; background: var(--dark-green); color: #fff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px; font-size: 1.5rem;
+    width: 60px;
+    height: 60px;
+    background: var(--dark-green);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
 }
 .contact-info-card h4 { color: #333; margin-bottom: 15px; }
 
-/* Talk to Us Form Section */
 .form-section-wrap { padding: 80px 0; }
 .contact-form-wrapper {
     background-color: var(--dark-slate);
@@ -780,49 +494,42 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
     color: #fff;
 }
 .contact-input {
-    background-color: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     padding: 15px;
     border-radius: 0;
 }
 .contact-input:focus {
-    background-color: rgba(255,255,255,0.15);
+    background-color: rgba(255, 255, 255, 0.15);
     border-color: var(--gold-color);
     box-shadow: none;
     color: #fff;
 }
-.contact-input::placeholder { color: rgba(255,255,255,0.5); }
-.form-select.contact-input option { color: #333; } /* Fix dropdown text color on select */
+.contact-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+.form-select.contact-input option { color: #333; }
 
-/* Opening Hours in Contact Text */
 .hours-list { margin-top: 30px; }
-.hours-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed #ddd; padding-bottom: 10px; }
+.hours-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 10px;
+}
 .hours-label { font-weight: 700; color: var(--dark-green); }
 
-/* Animation Classes */
-.menu-item.hide { display: none; }
-.menu-item.show { animation: fadeInUp 0.5s ease; }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-/* Import Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500&display=swap');
-
-:root {
-    --footer-bg: #041614; /* Deep Dark Green from the image */
-    --accent-gold: #c5a059; /* Bistly Gold color */
-    --text-muted: rgba(255, 255, 255, 0.7);
-    --border-color: rgba(255, 255, 255, 0.1);
-}
-
+/* ============================================================
+   8.  FOOTER
+   ============================================================ */
 .rs-footer {
     background-color: var(--footer-bg);
     color: #ffffff;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--body-font);
     position: relative;
     overflow: hidden;
 }
 
-/* Background Shapes (Watermarks) */
 .rs-footer .shape {
     position: absolute;
     z-index: -1;
@@ -831,21 +538,20 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
 .rs-footer .shape-one { top: 0; left: 0; max-width: 150px; }
 .rs-footer .shape-two { bottom: 0; right: 0; max-width: 150px; }
 
-/* Typography */
 .widget-title {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--heading-font);
     font-size: 24px;
     font-weight: 600;
     color: #ffffff;
 }
 
 .footer-about-widget p {
-    color: var(--text-muted);
+    color: var(--text-muted-light);
     font-size: 15px;
     line-height: 1.8;
 }
 
-/* Social Box Styles */
+/* Social icons */
 .social-box a {
     width: 40px;
     height: 40px;
@@ -859,41 +565,28 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
     transition: all 0.3s ease;
     text-decoration: none;
 }
-
 .social-box a:hover {
-    background-color: var(--accent-gold);
-    border-color: var(--accent-gold);
+    background-color: var(--gold-color);
+    border-color: var(--gold-color);
     transform: translateY(-3px);
 }
 
-/* Useful Links Styles */
-.footer-nav-widget ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-nav-widget ul li {
-    margin-bottom: 12px;
-}
-
+/* Useful links */
+.footer-nav-widget ul { list-style: none; padding: 0; }
+.footer-nav-widget ul li { margin-bottom: 12px; }
 .footer-nav-widget ul li a {
-    color: var(--text-muted);
+    color: var(--text-muted-light);
     text-decoration: none;
     transition: 0.3s;
     font-size: 15px;
 }
-
 .footer-nav-widget ul li a:hover {
-    color: var(--accent-gold);
+    color: var(--gold-color);
     padding-left: 5px;
 }
 
-/* Opening Times Styles */
-.footer-time-widget ul {
-    list-style: none;
-    padding: 0;
-}
-
+/* Opening times */
+.footer-time-widget ul { list-style: none; padding: 0; }
 .footer-time-widget ul li {
     display: flex;
     justify-content: space-between;
@@ -901,34 +594,21 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
     font-size: 15px;
     color: #ffffff;
 }
+.footer-time-widget .days  { color: #ffffff; font-weight: 500; }
+.footer-time-widget .time  { color: var(--text-muted-light); }
+.footer-time-widget .off-day { color: var(--gold-color); font-weight: 500; }
 
-.footer-time-widget .days {
-    color: #ffffff;
-    font-weight: 500;
-}
-
-.footer-time-widget .time {
-    color: var(--text-muted);
-}
-
-.footer-time-widget .off-day {
-    color: var(--accent-gold);
-    font-weight: 500;
-}
-
-/* Newsletter Styles */
+/* Newsletter */
 .footer-newsletter-widget p {
-    color: var(--text-muted);
+    color: var(--text-muted-light);
     margin-bottom: 25px;
 }
-
 .footer-newsletter-widget .form-group {
     position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
 }
-
 .footer-newsletter-widget .form_control {
     background: transparent;
     border: none;
@@ -937,16 +617,14 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
     width: 100%;
     outline: none;
 }
-
 .footer-newsletter-widget .form_control::placeholder {
-    color: var(--text-muted);
+    color: var(--text-muted-light);
     font-size: 14px;
 }
-
 .footer-newsletter-widget .submit-btn {
     background: transparent;
     border: none;
-    color: var(--accent-gold);
+    color: var(--gold-color);
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -954,176 +632,52 @@ h1, h2, h3, h4, h5 { font-family: var(--heading-font); }
     white-space: nowrap;
     transition: 0.3s;
 }
+.footer-newsletter-widget .submit-btn:hover { color: #ffffff; }
 
-.footer-newsletter-widget .submit-btn:hover {
-    color: #ffffff;
-}
-
-/* Copyright Area */
+/* Copyright */
 .copyright-area {
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-light);
     padding: 25px 0;
     margin-top: 20px;
     font-size: 14px;
-    color: var(--text-muted);
+    color: var(--text-muted-light);
 }
-
 .copyright-link a {
-    color: var(--text-muted);
+    color: var(--text-muted-light);
     text-decoration: none;
     margin-left: 20px;
     transition: 0.3s;
 }
+.copyright-link a:hover { color: var(--gold-color); }
 
-.copyright-link a:hover {
-    color: var(--accent-gold);
-}
-
-/* Responsive Fixes */
 @media (max-width: 768px) {
-    .copyright-area { text-align: center; }
-    .copyright-link { margin-top: 10px; float: none !important; }
+    .copyright-area  { text-align: center; }
+    .copyright-link  { margin-top: 10px; float: none !important; }
     .copyright-link a { margin: 0 10px; }
 }
-/* ==========================================================================
-   FOOTER STYLES (Bistly Theme)
-   ========================================================================== */
 
-.rs-footer {
-    background-color: #041614; /* Deep Green */
-    
+/* ============================================================
+   9.  ANIMATIONS
+   ============================================================ */
+.animate-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+.active .animate-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+.delay-1 { transition-delay: 0.2s; }
+.delay-2 { transition-delay: 0.4s; }
+.delay-3 { transition-delay: 0.6s; }
+
+.menu-item.hide { display: none; }
+.menu-item.show { animation: fadeInUp 0.5s ease; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ==========================================================================
-   END FOOTER STYLES
-   ========================================================================== */
-   /* Admin Dropdown Styling */
-.admin-menu-wrapper .admin-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 8px 15px !important;
-    border-radius: 5px;
-    color: #fff !important;
-    transition: all 0.3s ease;
-}
-
-.admin-menu-wrapper .admin-btn:hover {
-    background: var(--primary-color); /* The gold color */
-    border-color: var(--primary-color);
-}
-
-.admin-menu-wrapper .dropdown-menu {
-    background-color: #041614; /* Match the deep green footer color */
-    border: 1px solid var(--primary-color);
-    margin-top: 15px;
-    border-radius: 0; /* Square elegant look */
-    padding: 10px 0;
-}
-
-.admin-menu-wrapper .dropdown-header {
-    color: var(--primary-color);
-    text-transform: uppercase;
-    font-size: 11px;
-    letter-spacing: 1px;
-    font-weight: 700;
-}
-
-.admin-menu-wrapper .dropdown-item {
-    color: rgba(255, 255, 255, 0.8);
-    padding: 10px 20px;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.admin-menu-wrapper .dropdown-item i {
-    width: 20px;
-    color: var(--primary-color);
-}
-
-.admin-menu-wrapper .dropdown-item:hover {
-    background-color: rgba(197, 160, 89, 0.1); /* Light gold tint */
-    color: #fff;
-    padding-left: 25px;
-}
-
-.admin-menu-wrapper .dropdown-divider {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Arrow indicator color */
-.admin-menu-wrapper .dropdown-toggle::after {
-    color: var(--primary-color);
-}
-
-/* Sliding Icons in Hero */
-.sliding-icons {
-    margin-top: 30px;
-}
-
-.icon-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    margin: 0 10px;
-    transition: transform 0.3s ease;
-    min-width: 120px;
-}
-
-.icon-item:hover {
-    transform: translateY(-5px);
-}
-
-.icon-item i {
-    font-size: 2rem;
-    color: var(--gold-color);
-    margin-bottom: 10px;
-}
-
-.icon-item p {
-    color: #fff;
-    font-size: 0.9rem;
-    margin: 0;
-    text-transform: uppercase;
-    font-weight: 500;
-}
-
-/* Carousel Controls for Icons */
-#iconsCarousel .carousel-control-prev,
-#iconsCarousel .carousel-control-next {
-    width: 5%;
-    opacity: 0.7;
-}
-
-#iconsCarousel .carousel-control-prev-icon,
-#iconsCarousel .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    padding: 10px;
-}
-
-/* Slidable Banner */
-.slidable-banner {
-    background-color: #f8f9fa;
-    padding: 50px 0;
-}
-
-.slidable-banner .carousel-item img {
-    height: 400px;
-    object-fit: cover;
-}
-
-.slidable-banner .carousel-control-prev,
-.slidable-banner .carousel-control-next {
-    width: 5%;
-    opacity: 0.8;
-}
-
-.slidable-banner .carousel-control-prev-icon,
-.slidable-banner .carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    padding: 15px;
-}
+/* === END === */

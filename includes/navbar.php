@@ -9,7 +9,7 @@ $is_customer = !empty($_SESSION['customer_id']);
 $customer_name = $_SESSION['customer_name'] ?? 'Profile';
 $navbar_classes = 'navbar navbar-expand-lg fixed-top solid-bg';
 ?>
-<nav class="<?php echo $navbar_classes; ?>"
+<nav class="<?php echo $navbar_classes; ?>">
     <div class="container">
         <a class="navbar-brand text-white d-flex align-items-center gap-2" href="index.php">
             <img src="https://html.pixelfit.agency/bistly/assets/images/innerpage/logo/logo-white.png" alt="Brand Logo">
@@ -27,7 +27,6 @@ $navbar_classes = 'navbar navbar-expand-lg fixed-top solid-bg';
                 <!-- Home -->
                 
                 <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>" href="index.php">Home</a></li>
-                </li>
 
                 <!-- About -->
                 <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'about.php') ? 'active' : ''; ?>" href="about.php">About Us</a></li>
@@ -84,7 +83,7 @@ $navbar_classes = 'navbar navbar-expand-lg fixed-top solid-bg';
                     </ul>
                 </li>
                 <?php endif; ?>
-
-
- </div>
+            </ul>
+        </div>
+    </div>
 </nav>

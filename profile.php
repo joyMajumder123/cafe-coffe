@@ -96,10 +96,18 @@ $recommendation_reason_meta = [
 ];
 ?>
 
+<?php include 'includes/sidebar.php'; ?>
+
 <section class="py-5 user-page">
-    <div class="container" style="margin-top: 50px;">
+    <div class="container-fluid" style="margin-top: 50px;">
         <div class="row g-4">
-            <div class="col-lg-4">
+            <!-- Sidebar column (desktop only — off-canvas on mobile/tablet) -->
+            <div class="col-lg-auto d-none d-lg-block" style="width: 270px; flex-shrink: 0;"></div>
+
+            <!-- Main content -->
+            <div class="col">
+              <div class="row g-4">
+                <div class="col-lg-5">
                 <div class="card user-card">
                     <div class="card-header user-card-header">
                         <h5 class="mb-0">My Profile</h5>
@@ -155,7 +163,7 @@ $recommendation_reason_meta = [
                 </div>
             </div>
 
-            <div class="col-lg-8">
+            <div class="col-lg-7">
                 <div class="card user-card mb-4">
                     <div class="card-header user-card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
@@ -358,9 +366,6 @@ $recommendation_reason_meta = [
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -765,6 +770,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
+              </div><!-- /.row inner -->
+            </div><!-- /.col main -->
+        </div><!-- /.row outer -->
+    </div>
+</section>
 
 <?php
 include 'includes/footer.php';

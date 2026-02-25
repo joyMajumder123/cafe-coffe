@@ -86,80 +86,14 @@ include 'includes/navbar.php';
 
 <!-- Hero Section -->
 <header class="hero-wrapper home-hero" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80');">
-    <div class="hero-overlay">
-        
-    </div>
-    <div class="container hero-content">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content text-center">
         <p class="hero-eyebrow text-uppercase text-gold mb-2">Artisanal brews & bites</p>
-        <h1 class="hero-title">Classic Indian Resturant</h1>
-        <p class="hero-subtitle">Experience the authentic flavors of India in every bite.</p>
-
-        <div class="hero-offer-carousel-wrapper" style="margin-top: 80px;">
-            <div id="heroOfferCarousel" class="carousel slide hero-offer-carousel" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover" data-bs-touch="true">
-                <div class="carousel-indicators hero-offer-indicators">
-                    <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#heroOfferCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <article class="hero-offer-card">
-                            <div class="hero-offer-media">
-                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&q=80" alt="Street Food Night Market">
-                            </div>
-                            <div class="hero-offer-copy">
-                                <p class="hero-offer-tag">Night Market</p>
-                                <h5>Street Food Festival</h5>
-                                <p>Live chaat stations, kebab grills, and masala soda refills till midnight.</p>
-                                <div class="hero-offer-meta">
-                                    <span class="hero-offer-code">Use code NIGHT15</span>
-                                    <span class="hero-offer-cta">15% off dine-in</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="carousel-item">
-                        <article class="hero-offer-card">
-                            <div class="hero-offer-media">
-                                <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=900&q=80" alt="Brunch Offer">
-                            </div>
-                            <div class="hero-offer-copy">
-                                <p class="hero-offer-tag">Weekend Brunch</p>
-                                <h5>Bottomless Brunch & Jazz</h5>
-                                <p>Unlimited filter coffee, dosa live counter, and live jazz trio 11am-3pm.</p>
-                                <div class="hero-offer-meta">
-                                    <span class="hero-offer-code">Code BRUNCH20</span>
-                                    <span class="hero-offer-cta">20% off tables</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    <div class="carousel-item">
-                        <article class="hero-offer-card">
-                            <div class="hero-offer-media">
-                                <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=900&q=80" alt="Delivery Offer">
-                            </div>
-                            <div class="hero-offer-copy">
-                                <p class="hero-offer-tag">Delivery Rush</p>
-                                <h5>Swiggy & Zomato Combo</h5>
-                                <p>Buy 2 biryanis, get smoky wings free + ₹75 delivery cashback.</p>
-                                <div class="hero-offer-meta">
-                                    <span class="hero-offer-code">Combo code: WINGS</span>
-                                    <span class="hero-offer-cta">Limited 150 orders</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                </div>
-                <button class="carousel-control-prev hero-offer-control" type="button" data-bs-target="#heroOfferCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next hero-offer-control" type="button" data-bs-target="#heroOfferCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
+        <h1 class="hero-title">Classic Indian Restaurant</h1>
+        <p class="hero-subtitle mx-auto">Experience the authentic flavors of India in every bite.</p>
+        <div class="mt-4 d-flex gap-3 justify-content-center flex-wrap">
+            <a href="menulist.php" class="btn btn-gold">Explore Menu</a>
+            <a href="contact.php" class="btn btn-outline-gold">Book a Table</a>
         </div>
     </div>
 </header>
@@ -306,18 +240,12 @@ include 'includes/navbar.php';
 <section class="py-5">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" class="img-fluid rounded shadow w-300
-        " alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
         </div>
     </div>
 </section>

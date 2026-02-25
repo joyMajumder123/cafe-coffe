@@ -60,8 +60,16 @@ $status_progress_map = [
 ];
 ?>
 
+<?php include __DIR__ . '/includes/sidebar.php'; ?>
+
 <section class="py-5 user-page">
-    <div class="container" style="margin-top: 60px;">
+    <div class="container-fluid" style="margin-top: 60px;">
+        <div class="row g-4">
+            <!-- Sidebar column (desktop only) -->
+            <div class="col-lg-auto d-none d-lg-block" style="width: 270px; flex-shrink: 0;"></div>
+
+            <!-- Main content -->
+            <div class="col">
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
             <div>
                 <p class="text-gold text-uppercase small mb-1">Order History</p>
@@ -220,8 +228,6 @@ $status_progress_map = [
                 <?php endif; ?>
             </div>
         </div>
-    </div>
-</section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -343,6 +349,11 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(pollStatuses, 20000);
 });
 </script>
+
+            </div><!-- /.col main -->
+        </div><!-- /.row outer -->
+    </div>
+</section>
 
 <?php
 require_once __DIR__ . '/includes/footer.php';

@@ -26,34 +26,7 @@ $message = $_GET['message'] ?? '';
     </div>
 </header>
 
-<!-- Contact Info Cards -->
-<section class="py-5" style="background: #fdfdfd;">
-    <div class="container mt-4">
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="contact-info-card">
-                    <div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div>
-                    <h4>Our Location</h4>
-                    <p class="text-muted">456 Elm Avenue, Metropolis NY<br>10001</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="contact-info-card">
-                    <div class="icon-circle"><i class="fas fa-phone-alt"></i></div>
-                    <h4>Contact Number</h4>
-                    <p class="text-muted">+000 123 456 7890<br>+000 123 756 4352</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="contact-info-card">
-                    <div class="icon-circle"><i class="fas fa-envelope"></i></div>
-                    <h4>Email Address</h4>
-                    <p class="text-muted">Contact@Example.com<br>Info@Example.com</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- Talk to Us / Form Section -->
 <section class="form-section-wrap">
@@ -149,6 +122,34 @@ $message = $_GET['message'] ?? '';
                 </div>
             </div>
 
+        </div>
+    </div>
+</section>
+<!-- Contact Info Cards -->
+<section class="py-5" style="background: #fdfdfd;">
+    <div class="container mt-4">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div>
+                    <h4>Our Location</h4>
+                    <p class="text-muted">456 Elm Avenue, Metropolis NY<br>10001</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="icon-circle"><i class="fas fa-phone-alt"></i></div>
+                    <h4>Contact Number</h4>
+                    <p class="text-muted">+000 123 456 7890<br>+000 123 756 4352</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="contact-info-card">
+                    <div class="icon-circle"><i class="fas fa-envelope"></i></div>
+                    <h4>Email Address</h4>
+                    <p class="text-muted">Contact@Example.com<br>Info@Example.com</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>

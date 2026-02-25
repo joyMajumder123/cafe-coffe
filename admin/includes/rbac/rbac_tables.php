@@ -27,7 +27,8 @@ function rbac_run_migrations(mysqli $conn): void
         `label`       VARCHAR(120) NOT NULL,
         `group_name`  VARCHAR(60)  NOT NULL DEFAULT 'General',
         `description` VARCHAR(255) DEFAULT '',
-        `created_at`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+        `created_at`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+        `updated_at`  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
     // ── 3. Role ↔ Permission junction ────────────────────────────────
