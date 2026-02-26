@@ -21,7 +21,7 @@
             <!-- Chef 1 -->
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=500&q=80" class="card-img-top " style="width:416px; height:624px;" alt="Chef">
+                    <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=500&q=80" class="card-img-top " style="width:416px; height:624px;" alt="Chef" loading="lazy">
 
                     <div class="card-body">
                         <h4 class="card-title">John Doe</h4>
@@ -33,7 +33,7 @@
             <!-- Chef 2 -->
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?w=500&q=80" class="card-img-top" alt="Chef">
+                    <img src="https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?w=500&q=80" class="card-img-top" alt="Chef" loading="lazy">
                     <div class="card-body">
                         <h4 class="card-title">Sarah Smith</h4>
                         <p class="text-gold">Pastry Chef</p>
@@ -44,7 +44,7 @@
             <!-- Chef 3 -->
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=500&q=80" class="card-img-top" alt="Chef">
+                    <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=500&q=80" class="card-img-top" alt="Chef" loading="lazy">
                     <div class="card-body">
                         <h4 class="card-title">Michael Lee</h4>
                         <p class="text-gold">Sous Chef</p>

@@ -7,6 +7,7 @@ include 'includes/auth.php';
 include 'includes/db.php';
 
 header('Content-Type: application/json');
+header('Cache-Control: no-store');
 
 // Get the last known order ID from the client
 $last_order_id = intval($_GET['last_order_id'] ?? 0);

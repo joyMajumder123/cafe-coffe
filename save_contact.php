@@ -1,8 +1,18 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include 'admin/includes/db.php';
+require_once 'admin/includes/rbac/csrf.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: contact.php');
+    exit();
+}
+
+// CSRF validation
+if (!csrf_validate()) {
+    header('Location: contact.php?error=' . urlencode('Security token expired. Please try again.'));
     exit();
 }
 

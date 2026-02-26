@@ -1,9 +1,13 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.use_strict_mode', 1);
     session_start();
 }
 
 include 'admin/includes/db.php';
+require_once 'admin/includes/rbac/csrf.php';
 
 $errors = [];
 $redirect = $_GET['redirect'] ?? 'index.php';
@@ -15,7 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($email === '' || $password === '') {
+    if (!csrf_validate()) {
+        $errors[] = 'Security token expired. Please try again.';
+    } elseif ($email === '' || $password === '') {
         $errors[] = 'Email and password are required.';
     } else {
         $stmt = $conn->prepare("SELECT id, name, email, password_hash FROM customers WHERE email = ? LIMIT 1");
@@ -26,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if ($customer && password_verify($password, $customer['password_hash'])) {
+            session_regenerate_id(true);
             $_SESSION['customer_id'] = (int) $customer['id'];
             $_SESSION['customer_name'] = $customer['name'];
             $_SESSION['customer_email'] = $customer['email'];
@@ -56,6 +63,7 @@ include 'includes/navbar.php';
                             </div>
                         <?php endif; ?>
                         <form id="customer-login-form" method="post" action="customer_login.php?redirect=<?php echo urlencode($redirect); ?>" novalidate>
+                            <?php echo csrf_field(); ?>
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" class="form-control" required>

@@ -1,4 +1,8 @@
-<?php 
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once 'admin/includes/rbac/csrf.php';
 include 'includes/header.php'; 
 include 'includes/navbar.php';
 
@@ -77,6 +81,7 @@ $message = $_GET['message'] ?? '';
                     <?php endif; ?>
 
                     <form method="POST" action="save_contact.php">
+                        <?php echo csrf_field(); ?>
                         <div class="mb-3">
                             <label class="form-label text-white fw-bold">Full Name *</label>
                             <input type="text" class="form-control contact-input" name="name" placeholder="Enter full name" value="<?= htmlspecialchars($name) ?>" required>

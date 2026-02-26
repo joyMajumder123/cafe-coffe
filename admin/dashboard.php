@@ -54,23 +54,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_inquiry'])) {
                 <h2 class="mb-4">Dashboard Overview</h2>
 
                 <?php
-                // Total Orders
-                $totalOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders"))['total'] ?? 0;
+                // ── Consolidated dashboard stats (single query for orders) ──
+                $orderStats = $conn->query("
+                    SELECT 
+                        COUNT(*) as total_orders,
+                        COALESCE(SUM(CASE WHEN status IN ('completed','delivered') THEN total_amount ELSE 0 END), 0) as total_revenue,
+                        COALESCE(SUM(CASE WHEN status IN ('completed','delivered') AND DATE(created_at)=CURDATE() THEN total_amount ELSE 0 END), 0) as today_revenue,
+                        SUM(CASE WHEN status IN ('completed','delivered') THEN 1 ELSE 0 END) as completed_orders,
+                        SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) as pending_orders,
+                        SUM(CASE WHEN status IN ('confirmed','preparing','ready') THEN 1 ELSE 0 END) as preparing_orders
+                    FROM orders
+                ")->fetch_assoc();
+                $totalOrders = $orderStats['total_orders'] ?? 0;
+                $todayRevenue = $orderStats['today_revenue'] ?? 0;
+                $totalRevenue = $orderStats['total_revenue'] ?? 0;
+                $completedOrders = $orderStats['completed_orders'] ?? 0;
+                $pendingOrders = $orderStats['pending_orders'] ?? 0;
+                $preparingOrders = $orderStats['preparing_orders'] ?? 0;
                 
-                // Revenue calculations - ONLY from completed/delivered orders
-                $todayRevenue = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(total_amount), 0) as revenue FROM orders WHERE DATE(created_at)=CURDATE() AND status IN ('completed', 'delivered')"))['revenue'] ?? 0;
-                $totalRevenue = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COALESCE(SUM(total_amount), 0) as revenue FROM orders WHERE status IN ('completed', 'delivered')"))['revenue'] ?? 0;
-                
-                // Order statuses
-                $completedOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders WHERE status IN ('completed', 'delivered')"))['total'] ?? 0;
-                $pendingOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders WHERE status='pending'"))['total'] ?? 0;
-                $preparingOrders = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM orders WHERE status IN ('confirmed', 'preparing', 'ready')"))['total'] ?? 0;
-                
-                // Other metrics
-                $totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM customers"))['total'] ?? 0;
-                $totalMenuItems = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM menu_items"))['total'] ?? 0;
-                $totalReservations = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM reservations"))['total'] ?? 0;
-                $totalInquiries = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM contact_submissions"))['total'] ?? 0;
+                // Other metrics (one query each — small tables)
+                $totalUsers = $conn->query("SELECT COUNT(*) as total FROM customers")->fetch_assoc()['total'] ?? 0;
+                $totalMenuItems = $conn->query("SELECT COUNT(*) as total FROM menu_items")->fetch_assoc()['total'] ?? 0;
+                $totalReservations = $conn->query("SELECT COUNT(*) as total FROM reservations")->fetch_assoc()['total'] ?? 0;
+                $totalInquiries = $conn->query("SELECT COUNT(*) as total FROM contact_submissions")->fetch_assoc()['total'] ?? 0;
                 ?>
 
                 <!-- Stats Cards -->

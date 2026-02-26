@@ -1,9 +1,13 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.use_strict_mode', 1);
     session_start();
 }
 
 include 'admin/includes/db.php';
+require_once 'admin/includes/rbac/csrf.php';
 
 $errors = [];
 $success = '';
@@ -13,44 +17,49 @@ if (!preg_match('/^[a-zA-Z0-9_\/-]+\.php$/', $redirect)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm_password'] ?? '';
+    if (!csrf_validate()) {
+        $errors[] = 'Security token expired. Please try again.';
+    } else {
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
 
-    if ($name === '' || $email === '' || $password === '') {
-        $errors[] = 'Name, email, and password are required.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Invalid email address.';
-    } elseif ($password !== $confirm) {
-        $errors[] = 'Passwords do not match.';
-    }
-
-    if (empty($errors)) {
-        $stmt = $conn->prepare("SELECT id FROM customers WHERE email = ? LIMIT 1");
-        $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $errors[] = 'An account with this email already exists.';
+        if ($name === '' || $email === '' || $password === '') {
+            $errors[] = 'Name, email, and password are required.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Invalid email address.';
+        } elseif ($password !== $confirm) {
+            $errors[] = 'Passwords do not match.';
         }
-        $stmt->close();
-    }
 
-    if (empty($errors)) {
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO customers (name, email, phone, password_hash) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('ssss', $name, $email, $phone, $password_hash);
-        if ($stmt->execute()) {
-            $_SESSION['customer_id'] = $stmt->insert_id;
-            $_SESSION['customer_name'] = $name;
-            $_SESSION['customer_email'] = $email;
-            header('Location: ' . $redirect);
-            exit();
+        if (empty($errors)) {
+            $stmt = $conn->prepare("SELECT id FROM customers WHERE email = ? LIMIT 1");
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->store_result();
+            if ($stmt->num_rows > 0) {
+                $errors[] = 'An account with this email already exists.';
+            }
+            $stmt->close();
         }
-        $stmt->close();
-        $errors[] = 'Registration failed. Please try again.';
+
+        if (empty($errors)) {
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO customers (name, email, phone, password_hash) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param('ssss', $name, $email, $phone, $password_hash);
+            if ($stmt->execute()) {
+                session_regenerate_id(true);
+                $_SESSION['customer_id'] = $stmt->insert_id;
+                $_SESSION['customer_name'] = $name;
+                $_SESSION['customer_email'] = $email;
+                header('Location: ' . $redirect);
+                exit();
+            }
+            $stmt->close();
+            $errors[] = 'Registration failed. Please try again.';
+        }
     }
 }
 
@@ -76,6 +85,7 @@ include 'includes/navbar.php';
                             <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
                         <?php endif; ?>
                         <form id="customer-register-form" method="post" action="customer_register.php?redirect=<?php echo urlencode($redirect); ?>" novalidate>
+                            <?php echo csrf_field(); ?>
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
                                 <input type="text" name="name" class="form-control" required>

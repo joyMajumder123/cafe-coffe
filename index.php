@@ -1,82 +1,22 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.use_strict_mode', 1);
     session_start();
 }
 
 require_once 'admin/includes/db.php';
 require_once 'includes/recommendations.php';
+require_once 'includes/menu_helpers.php';
 
-if (!function_exists('slugify_category')) {
-    function slugify_category(string $label): string
-    {
-        $label = strtolower(trim($label));
-        $label = preg_replace('/[^a-z0-9]+/', '-', $label);
-        $label = trim($label, '-');
-        return $label !== '' ? $label : 'uncategorized';
-    }
-}
-
-$menu_items = [];
-$category_lookup = [];
-$categories_from_table = [];
-
-$category_result = $conn->query("SELECT name FROM categories ORDER BY name ASC");
-if ($category_result) {
-    while ($category_row = $category_result->fetch_assoc()) {
-        $name = trim($category_row['name'] ?? '');
-        if ($name === '') {
-            continue;
-        }
-        $categories_from_table[slugify_category($name)] = $name;
-    }
-}
-
-$menu_result = $conn->query("SELECT id, name, description, category, price, image FROM menu_items WHERE status = 'active' ORDER BY created_at DESC");
-if ($menu_result) {
-    while ($row = $menu_result->fetch_assoc()) {
-        $category_label = trim($row['category'] ?? '');
-        if ($category_label === '') {
-            $category_label = 'Chef Specials';
-        }
-        $category_slug = slugify_category($category_label);
-        $category_lookup[$category_slug] = $category_label;
-        $row['category_label'] = $category_label;
-        $row['category_slug'] = $category_slug;
-        $row['image_url'] = resolve_menu_image($row['image'] ?? '');
-        $menu_items[] = $row;
-    }
-}
-
-$filter_categories = [];
-if (!empty($categories_from_table)) {
-    foreach ($categories_from_table as $slug => $label) {
-        if (isset($category_lookup[$slug])) {
-            $filter_categories[$slug] = $label;
-        }
-    }
-}
-foreach ($category_lookup as $slug => $label) {
-    if (!isset($filter_categories[$slug])) {
-        $filter_categories[$slug] = $label;
-    }
-}
+$menu_data = fetch_menu_data($conn);
+$menu_items = $menu_data['menu_items'];
+$filter_categories = $menu_data['filter_categories'];
 
 $customer_orders = [];
 if (!empty($_SESSION['customer_id'])) {
-    $customer_id = (int) $_SESSION['customer_id'];
-    $order_stmt = $conn->prepare('SELECT id, items FROM orders WHERE customer_id = ? ORDER BY created_at DESC LIMIT 20');
-    if ($order_stmt) {
-        $order_stmt->bind_param('i', $customer_id);
-        if ($order_stmt->execute()) {
-            $order_result = $order_stmt->get_result();
-            if ($order_result) {
-                while ($order = $order_result->fetch_assoc()) {
-                    $customer_orders[] = $order;
-                }
-            }
-        }
-        $order_stmt->close();
-    }
+    $customer_orders = fetch_customer_order_history($conn, (int) $_SESSION['customer_id']);
 }
 
 include 'includes/header.php';
@@ -240,12 +180,12 @@ include 'includes/navbar.php';
 <section class="py-5">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
-            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
+            <div class="col-md-4"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" class="img-fluid rounded shadow" alt="Gallery" loading="lazy"></div>
         </div>
     </div>
 </section>

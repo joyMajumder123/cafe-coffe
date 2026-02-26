@@ -1,5 +1,8 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.use_strict_mode', 1);
     session_start();
 }
 
@@ -9,6 +12,7 @@ if (empty($_SESSION['customer_id'])) {
 }
 
 include 'admin/includes/db.php';
+require_once 'admin/includes/rbac/csrf.php';
 require_once 'includes/customer_meta.php';
 include 'includes/user_layout.php';
 
@@ -70,6 +74,7 @@ $preferred_payment_method = $preferred_payment ?: 'cash';
                     <div class="card-body">
                         <div id="checkout-alert" class="mb-3"></div>
                         <form id="checkout-form" novalidate>
+                            <?php echo csrf_field(); ?>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Full Name</label>

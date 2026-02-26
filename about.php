@@ -26,10 +26,10 @@
                 <p class="text-muted">
                     Our chefs travel the world to bring unique flavors to your table. Whether it's a casual lunch or a romantic dinner, we ensure an unforgettable experience.
                 </p>
-                <img src="https://images.unsplash.com/photo-1577106263724-2c8e03bfe9cf?w=500&q=80" class="img-fluid mt-3 rounded shadow-sm" alt="Chef">
+                <img src="https://images.unsplash.com/photo-1577106263724-2c8e03bfe9cf?w=500&q=80" class="img-fluid mt-3 rounded shadow-sm" alt="Chef" loading="lazy">
             </div>
             <div class="col-lg-6 mt-5 mt-lg-0">
-                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" class="w-100 rounded shadow" alt="Restaurant Interior">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" class="w-100 rounded shadow" alt="Restaurant Interior" loading="lazy">
             </div>
         </div>
     </div>
