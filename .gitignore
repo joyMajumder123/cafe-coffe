@@ -4,6 +4,9 @@ auth_config.php
 *_config.php
 !*.example.php
 
+# Schema version cache 
+admin/includes/.schema_version
+
 # Development Files
 .vscode/
 .idea/
